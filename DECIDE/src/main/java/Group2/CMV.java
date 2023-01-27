@@ -1,5 +1,8 @@
 package Group2;
 
+import java.awt.*;
+
+
 public class CMV{
 
     /*
@@ -58,8 +61,19 @@ public class CMV{
     // TODO!
     public static void calcLIC2(){}
 
-    // TODO!
-    public static void calcLIC3(){}
+    public static void calcLIC3(){
+        for(int i = 0; i < Input.NUMPOINTS-2; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+1];
+            Point p3 = Input.Coordinates[i+2];
+            Double area = Math.abs(p1.getX()*p2.getY()+p2.getX()*p3.getY() + p3.getX()*p1.getY() - p1.getY()*p2.getX() - p2.getY()*p3.getX() - p3.getY()*p1.getX())/2;
+            if (doubleCompare(area, Input.Parameters.AREA1) == Comptype.GT) {
+                cmv[3] = true;
+                return;
+            }
+        }
+        cmv[3] = false;
+    }
 
     // TODO!
     public static void calcLIC4(){}
