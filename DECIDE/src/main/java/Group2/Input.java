@@ -1,5 +1,7 @@
 package Group2;
 
+import java.awt.*;
+
 public class Input {
     public enum Connector {
         ANDD, ORR, NOTUSED
@@ -7,6 +9,9 @@ public class Input {
     public static int NUMPOINTS;
     public static Connector[][] LCM = new Connector[15][15];
     public boolean[] PUV = new boolean[15];
+
+    public static Point[] Coordinates = new Point[100];
+
     public static class Parameters {
         public static double LENGTH1;
         public static double RADIUS1;
@@ -28,5 +33,4 @@ public class Input {
         public static double RADIUS2;
         public static double AREA2;
     }
-
 }
