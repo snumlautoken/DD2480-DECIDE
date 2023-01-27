@@ -15,6 +15,21 @@ public class CMV{
     }
     public static boolean[] cmv = new boolean[15];
 
+    /**
+     * Compare double values and return result as Comptype.
+     * @param a double to compare
+     * @param b double to compare
+     * @return Comptype EQ if difference a - b < 0.000001, LT if a < b, GT if a > b
+     * </>
+     */
+    public static Comptype doubleCompare(double a, double b) {
+        if (Math.abs(a - b) < 0.000001)
+            return Comptype.EQ;
+        if (a < b)
+            return Comptype.LT;
+
+        return Comptype.EQ;
+    }
     // Calls all LIC calculcations
     public static void calculate(){
         calcLIC0();
