@@ -42,4 +42,46 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(-1.00, -1.00), "Error: CMV doubleCompare -1.00 expected to be EQ -1.00");
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
+
+
+    @Test
+    public void TestLIC3() {
+        Input.Coordinates[0].setLocation(5, 6);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(100, 100);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.AREA1 = 1;
+        CMV.calcLIC3();
+        assertTrue(CMV.cmv[3], "Error: LIC3 gives false when true");
+        Input.Coordinates[0].setLocation(1, 1);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.Coordinates[4].setLocation(5, 6);
+        Input.Coordinates[5].setLocation(1, 1);
+        Input.Coordinates[6].setLocation(100, 100);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.AREA1 = 10000000;
+        CMV.calcLIC3();
+        assertFalse(CMV.cmv[3], "Error: LIC3 true when false");
+
+        Input.Coordinates[0].setLocation(1, 1);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.Coordinates[4].setLocation(5, 6);
+        Input.Coordinates[5].setLocation(1, 1);
+        Input.Coordinates[6].setLocation(100, 100);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.AREA1 = 1;
+        CMV.calcLIC3();
+        assertTrue(CMV.cmv[3], "Error: LIC3 false when true, for numpoints > 3");
+
+        Input.NUMPOINTS = 2;
+        Input.Parameters.AREA1 = 1;
+        CMV.calcLIC3();
+        assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
+
+    }
+
 }
