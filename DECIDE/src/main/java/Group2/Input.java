@@ -8,8 +8,7 @@ public class Input {
     }
     public static int NUMPOINTS;
     public static Connector[][] LCM = new Connector[15][15];
-    public boolean[] PUV = new boolean[15];
-
+    public static boolean[] PUV = new boolean[15];
     public static Point[] Coordinates = new Point[100];
 
     public static class Parameters {
