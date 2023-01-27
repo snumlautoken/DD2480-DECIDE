@@ -1,6 +1,18 @@
 package Group2;
 
 public class CMV{
+
+    /*
+     * Comparison results
+     * GT = Greater Than
+     * LT = Lesser Than
+     * EQ = Equals
+     */
+    public enum Comptype {
+        GT,
+        LT,
+        EQ;
+    }
     public static boolean[] cmv = new boolean[15];
 
     // Calls all LIC calculcations
