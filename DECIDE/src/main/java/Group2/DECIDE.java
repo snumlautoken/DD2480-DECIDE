@@ -1,8 +1,11 @@
 package Group2;
 
 public class DECIDE {
+	boolean launch;
 
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
+	public void decide() {
+		
+	
+	}
 }
+
