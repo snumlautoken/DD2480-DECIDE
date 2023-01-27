@@ -28,7 +28,7 @@ public class CMV{
         if (a < b)
             return Comptype.LT;
 
-        return Comptype.EQ;
+        return Comptype.GT;
     }
     // Calls all LIC calculcations
     public static void calculate(){
