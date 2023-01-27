@@ -1,6 +1,7 @@
 package Group2;
 
 import java.awt.*;
+import java.util.Arrays;
 
 
 public class CMV{
@@ -62,11 +63,11 @@ public class CMV{
     public static void calcLIC2(){}
 
     public static void calcLIC3(){
-        if(Input.NUMPOINTS < 3) {
+        if (Input.NUMPOINTS < 3) {
             cmv[3] = false;
             return;
         }
-        for(int i = 0; i < Input.NUMPOINTS-2; i++) {
+        for (int i = 0; i < Input.NUMPOINTS-2; i++) {
             Point p1 = Input.Coordinates[i];
             Point p2 = Input.Coordinates[i+1];
             Point p3 = Input.Coordinates[i+2];
@@ -91,8 +92,38 @@ public class CMV{
     // TODO!
     public static void calcLIC7(){}
 
-    // TODO!
-    public static void calcLIC8(){}
+    public static void calcLIC8(){
+        if (Input.NUMPOINTS < 5) {
+            cmv[8] = false;
+            return;
+        }
+        // Calculate minimum radius for enclosing triangle
+        for (int i = 0; i < Input.NUMPOINTS-2-Input.Parameters.APTS-Input.Parameters.BPTS; i++) {
+            double rad;
+            double a = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.APTS+1]);
+            double b = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2]);
+            double c = Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2].distance(Input.Coordinates[i+Input.Parameters.APTS+1]);
+            double sides[] = new double[3];
+            sides[0] = a;
+            sides[1] = b;
+            sides[2] = c;
+            Arrays.sort(sides);
+            // Obtuse triangle => longest side is diameter of smallest possible circle
+            if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
+                rad = sides[2]/2;
+            }
+            // Otherwise => circumcircle is smallest possible circle
+            else {
+                rad = (a*b*c)/Math.sqrt((a+b+c)*(b+c-a)*(c+a-b)*(a+b-c));
+            }
+            if (doubleCompare(rad, Input.Parameters.RADIUS1) == Comptype.GT) {
+                cmv[8] = true;
+                return;
+            }
+        }
+
+        cmv[8] = false;
+    }
 
     // TODO!
     public static void calcLIC9(){}

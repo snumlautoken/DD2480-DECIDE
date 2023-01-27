@@ -84,4 +84,61 @@ public class Tests {
 
     }
 
+    @Test
+    public void TestLIC8() {
+        // Obtuse triangle
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(10, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(5, 1);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.RADIUS1 = 5;
+        CMV.calcLIC8();
+        assertFalse(CMV.cmv[8], "Error: Obtuse LIC8 gives true when false");
+        Input.Parameters.RADIUS1 = 4;
+        CMV.calcLIC8();
+        assertTrue(CMV.cmv[8], "Error: Obtuse LIC8 gives false when true");
+
+        // Right triangle
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(4, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(0, 3);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.RADIUS1 = 2.5;
+        CMV.calcLIC8();
+        assertFalse(CMV.cmv[8], "Error: Right LIC8 gives true when false");
+        Input.Parameters.RADIUS1 = 2.4;
+        CMV.calcLIC8();
+        assertTrue(CMV.cmv[8], "Error: Right LIC8 gives false when true");
+
+        // Acute triangle
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(5, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(2.5, 4);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.RADIUS1 = 3;
+        CMV.calcLIC8();
+        assertFalse(CMV.cmv[8], "Error: Acute LIC8 gives true when false");
+        Input.Parameters.RADIUS1 = 2;
+        CMV.calcLIC8();
+        assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+        Input.Coordinates[1].setLocation(0, 0);
+        Input.Coordinates[3].setLocation(100, 0);
+        Input.Coordinates[5].setLocation(50, -50);
+        Input.NUMPOINTS = 6;
+        Input.Parameters.RADIUS1 = 4;
+        assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+    }
+
 }
