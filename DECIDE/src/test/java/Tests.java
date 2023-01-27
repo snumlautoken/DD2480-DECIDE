@@ -56,10 +56,11 @@ public class Tests {
         Input.Coordinates[0].setLocation(1, 1);
         Input.Coordinates[1].setLocation(1, 1);
         Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(1, 1);
         Input.Coordinates[4].setLocation(5, 6);
         Input.Coordinates[5].setLocation(1, 1);
         Input.Coordinates[6].setLocation(100, 100);
-        Input.NUMPOINTS = 3;
+        Input.NUMPOINTS = 7;
         Input.Parameters.AREA1 = 10000000;
         CMV.calcLIC3();
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false");
@@ -67,13 +68,20 @@ public class Tests {
         Input.Coordinates[0].setLocation(1, 1);
         Input.Coordinates[1].setLocation(1, 1);
         Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(1, 1);
         Input.Coordinates[4].setLocation(5, 6);
         Input.Coordinates[5].setLocation(1, 1);
         Input.Coordinates[6].setLocation(100, 100);
-        Input.NUMPOINTS = 6;
+        Input.NUMPOINTS = 7;
         Input.Parameters.AREA1 = 1;
         CMV.calcLIC3();
-        assertFalse(CMV.cmv[3], "Error: LIC3 false when true, for numpoints > 3");
+        assertTrue(CMV.cmv[3], "Error: LIC3 false when true, for numpoints > 3");
+
+        Input.NUMPOINTS = 2;
+        Input.Parameters.AREA1 = 1;
+        CMV.calcLIC3();
+        assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
+
     }
 
 }

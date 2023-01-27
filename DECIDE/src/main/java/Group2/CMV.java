@@ -62,6 +62,10 @@ public class CMV{
     public static void calcLIC2(){}
 
     public static void calcLIC3(){
+        if(Input.NUMPOINTS < 3) {
+            cmv[3] = false;
+            return;
+        }
         for(int i = 0; i < Input.NUMPOINTS-2; i++) {
             Point p1 = Input.Coordinates[i];
             Point p2 = Input.Coordinates[i+1];
