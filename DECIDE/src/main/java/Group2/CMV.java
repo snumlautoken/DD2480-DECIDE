@@ -60,7 +60,36 @@ public class CMV{
     public static void calcLIC1(){}
 
     // TODO!
-    public static void calcLIC2(){}
+    public static void calcLIC2(){
+        cmv[2] = false;
+
+        if(Input.NUMPOINTS < 3){
+            return;
+        }
+
+        for (int i = 0; i < Input.NUMPOINTS-2; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+1];
+            Point p3 = Input.Coordinates[i+2];
+
+
+            // If either the first point or the last point (or both) coincides with the vertex, the angle is undefined
+            if((doubleCompare(p1.x, p2.x)==Comptype.EQ&&doubleCompare(p1.y, p2.y)==Comptype.EQ)
+             ||(doubleCompare(p2.x, p3.x)==Comptype.EQ&&doubleCompare(p2.y, p3.y)==Comptype.EQ)){
+                continue;
+            }
+            
+            double angle = Math.acos((Math.pow(p2.distance(p1), 2)+Math.pow(p2.distance(p3), 2)-Math.pow(p1.distance(p3), 2))/
+            (2*p2.distance(p1)*p2.distance(p3)));
+            
+            if(doubleCompare(angle, Math.PI-Input.Parameters.EPSILON)==Comptype.LT || doubleCompare(angle, Math.PI+Input.Parameters.EPSILON)==Comptype.GT){
+                cmv[2] = true;
+                break;
+            }
+        }
+
+
+    }
 
     public static void calcLIC3(){
         if (Input.NUMPOINTS < 3) {
