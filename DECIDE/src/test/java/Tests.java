@@ -141,4 +141,26 @@ public class Tests {
         assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
     }
 
+    @Test
+    public void TestLIC13() {
+        // Obtuse triangle
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(10, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(5, 1);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.RADIUS1 = 5;
+        Input.Parameters.RADIUS1 = 4;
+        CMV.calcLIC13();
+        assertFalse(CMV.cmv[13], "Error: Obtuse LIC8 gives true when false");
+        Input.Parameters.RADIUS1 = 4;
+        Input.Parameters.RADIUS2 = 5;
+        CMV.calcLIC13();
+        assertTrue(CMV.cmv[13], "Error: Obtuse LIC8 gives false when true");
+    }
+
+
 }
