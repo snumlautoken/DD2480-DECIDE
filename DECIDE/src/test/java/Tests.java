@@ -1,5 +1,8 @@
 import Group2.CMV;
+import Group2.DECIDE;
 import Group2.Input;
+import Group2.Input.Connector;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -43,8 +46,39 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
 
+    // Add more tests when more LICS are available
     @Test
-    public void TestLIC2(){
+    public void TestDecide() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = i; j < 15; j++) {
+                Input.LCM[i][j] = Connector.NOTUSED;
+                Input.LCM[j][i] = Input.LCM[i][j];
+            }
+            Input.PUV[i] = false;
+        }
+
+        Input.LCM[3][8] = Connector.ORR;
+        Input.LCM[8][3] = Connector.ORR;
+        Input.PUV[3] = true;
+        Input.PUV[8] = true;
+
+        Input.Coordinates[0].setLocation(5, 6);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(100, 100);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.AREA1 = 1;
+        Input.Parameters.RADIUS1 = 1;
+        Input.Parameters.EPSILON = 0.0;
+        DECIDE.decide();
+        assertTrue(DECIDE.launch, "Error: decide gives false when true");
+        Input.LCM[3][8] = Connector.ANDD;
+        Input.LCM[8][3] = Connector.ANDD;
+        DECIDE.decide();
+        assertFalse(DECIDE.launch, "Error: decide gives true when false");
+    }
+
+    @Test
+    public void TestLIC2() {
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(0, 0);
         Input.Coordinates[2].setLocation(1, 0);
