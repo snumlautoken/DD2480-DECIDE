@@ -43,6 +43,32 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
 
+    @Test
+    public void TestLIC2(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0, 0);
+        Input.Coordinates[2].setLocation(1, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.EPSILON = 0.0;
+
+        CMV.calcLIC2();
+        assertTrue(!CMV.cmv[2], "Error! LIC2 should be false since points coincides");
+
+        Input.Coordinates[3].setLocation(0, 0.5);
+        Input.NUMPOINTS = 4;
+        CMV.calcLIC2();
+        assertTrue(CMV.cmv[2], "Error! LIC2 should be true since there is an angle less than PI");
+
+        Input.Coordinates[3].setLocation(2, 0);
+        Input.Parameters.EPSILON = 0.1;
+        CMV.calcLIC2();
+        assertTrue(!CMV.cmv[2], "Error! LIC2 should be false since the angle is PI and there is an epsilon");
+
+        Input.Coordinates[3].setLocation(2, 0.5);
+        Input.Parameters.EPSILON = 0.1;
+        CMV.calcLIC2();
+        assertTrue(CMV.cmv[2], "Error! LIC2 should be true since the angle is slightly less than PI");
+    }
 
     @Test
     public void TestLIC3() {
