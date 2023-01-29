@@ -222,6 +222,30 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC12(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0.5, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.Coordinates[3].setLocation(1, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.LENGTH1 = 0.9;
+        Input.Parameters.LENGTH2 = 0.9;
+        Input.Parameters.KPTS = 2;
+        CMV.calcLIC12();
+        assertFalse(CMV.cmv[12], "Error: Should be False");
+
+        Input.Parameters.LENGTH2 = 1.1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be True");
+
+        Input.Parameters.LENGTH1 = 1.9;
+        Input.Parameters.LENGTH2 = 0.6;
+        Input.Parameters.KPTS = 1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be true");
+    }
+
+    @Test
     public void TestLIC13() {
         // Obtuse triangle
         Input.Parameters.APTS = 1;
