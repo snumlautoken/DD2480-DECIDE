@@ -134,7 +134,7 @@ public class CMV{
             Point p1 = Input.Coordinates[i];
             Point p2 = Input.Coordinates[i+Input.Parameters.KPTS+1]; // Point separated by KPTS points
 
-            if(p1.distance(p2) > Input.Parameters.LENGTH1){
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH1) == Comptype.GT){
                 cmv[7] = true;
                 break;
             }
