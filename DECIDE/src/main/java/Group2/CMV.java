@@ -204,6 +204,10 @@ public class CMV{
         sides[0] = a;
         sides[1] = b;
         sides[2] = c;
+        
+        if (a == 0 && b == 0 && c == 0)
+            return 0;
+
         Arrays.sort(sides);
         // Obtuse triangle => longest side is diameter of smallest possible circle
         if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
