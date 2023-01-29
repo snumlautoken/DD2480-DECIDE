@@ -53,15 +53,18 @@ public class CMV{
         calcLIC14();
     }
 
-   // MUST USE DOUBLE COMPARE IN IF STATEMENT
+   // TODO!
     public static void calcLIC0(){
-        // for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
-        //     Comptype CT = C
-        //     if (Input.Coordinates[i].distance(Input.Coordinates[i+1]) > Input.Parameters.LENGTH1) {
-        //         return true;
-        //     }
-        // }
-        // return false;
+        cmv[0] = false;
+
+        if (Input.NUMPOINTS < 2) return;
+
+        for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
+            if (doubleCompare(Input.Coordinates[i].distance(Input.Coordinates[i+1]), Input.Parameters.LENGTH1) == Comptype.GT) {
+                cmv[0] = true;
+                return;
+            }
+        }
     }
 
     // TODO!
