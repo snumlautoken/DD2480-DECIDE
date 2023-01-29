@@ -118,8 +118,29 @@ public class CMV{
     // TODO!
     public static void calcLIC6(){}
 
-    // TODO!
-    public static void calcLIC7(){}
+    /**
+     * There exists at least one set of two data points separated by exactly KPTS consecutive intervening points 
+     * that are a distance greater than the length, LENGTH1, apart. 
+     * The condition is not met when NUMPOINTS < 3
+     */
+    public static void calcLIC7(){
+        cmv[7] = false;
+
+        if(Input.NUMPOINTS < 3) return;
+
+        if(Input.Parameters.KPTS < 1 || Input.Parameters.KPTS > (Input.NUMPOINTS - 2)) return;
+        
+        for (int i = 0; i < Input.NUMPOINTS-Input.Parameters.KPTS-1; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+Input.Parameters.KPTS+1]; // Point separated by KPTS points
+
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH1) == Comptype.GT){
+                cmv[7] = true;
+                break;
+            }
+        }
+
+    }
 
     public static void calcLIC8(){
         if (Input.NUMPOINTS < 5) {
