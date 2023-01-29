@@ -64,7 +64,7 @@ public class CMV{
 
         for (int i = 0; i < Input.NUMPOINTS - 2; i++) {
             double minimumCircleRadius = minRadiusEnclose(Input.Coordinates[i], Input.Coordinates[i + 1], Input.Coordinates[i + 2]);
-            if (doubleCompare(minimumCircleRadius, Input.Parameters.RADIUS1) == Comptype.GT) {
+            if (doubleCompare(minimumCircleRadius, Input.Parameters.RADIUS1) != Comptype.GT) {
                 cmv[1] = true;
                 return;
             }
