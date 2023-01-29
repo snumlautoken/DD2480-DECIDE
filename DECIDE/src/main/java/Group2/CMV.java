@@ -181,7 +181,24 @@ public class CMV{
     public static void calcLIC11(){}
 
     // TODO!
-    public static void calcLIC12(){}
+    public static void calcLIC12(){
+        cmv[12] = false;
+
+        if(Input.NUMPOINTS < 3) return;
+
+        if(Input.Parameters.KPTS < 1 || Input.Parameters.KPTS > (Input.NUMPOINTS - 2)) return;
+        
+        for (int i = 0; i < Input.NUMPOINTS-Input.Parameters.KPTS-1; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+Input.Parameters.KPTS+1]; // Point separated by KPTS points
+
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH1) == Comptype.GT &&
+               doubleCompare(p1.distance(p2), Input.Parameters.LENGTH2) == Comptype.LT) {
+                cmv[12] = true;
+                break;
+            }
+        }
+    }
 
     public static void calcLIC13(){
         cmv[13] = false;
