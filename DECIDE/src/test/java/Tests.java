@@ -55,9 +55,9 @@ public class Tests {
 
         Input.Coordinates[2].setLocation(1, 1);
         Input.NUMPOINTS = 3;
-        Input.Parameters.LENGTH1 = 3.0;
-        assertTrue(!CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 3");
-
+        Input.Parameters.LENGTH1 = 4.0;
+        CMV.calcLIC0();
+        assertTrue(!CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 4");
     }
 
 
