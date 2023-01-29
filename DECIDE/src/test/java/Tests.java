@@ -44,6 +44,33 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC1() {
+        Input.Parameters.RADIUS1 = -1;
+        Input.NUMPOINTS = 3;
+        Input.Coordinates[0].setLocation(1, 1);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(1, 1);
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if Radius1 is less than 0");
+
+        Input.Parameters.RADIUS1 = 1;
+        Input.NUMPOINTS = 2;
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if NUMPOINTS is less than 3");
+
+        Input.NUMPOINTS = 3;
+        CMV.calcLIC1();
+        assertTrue(CMV.cmv[1], "Error: CMV1 should be set to true with three points on the same coordinate");
+
+        Input.Coordinates[2].setLocation(8, 8);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.NUMPOINTS = 4;
+
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
+
+    }
+    @Test
     public void TestLIC2(){
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(0, 0);

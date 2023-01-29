@@ -57,7 +57,19 @@ public class CMV{
     public static void calcLIC0(){}
 
     // TODO!
-    public static void calcLIC1(){}
+    public static void calcLIC1(){
+        cmv[1] = false;
+        if (Input.NUMPOINTS < 3 || doubleCompare(Input.Parameters.RADIUS1, 0) == Comptype.LT)
+            return;
+
+        for (int i = 0; i < Input.NUMPOINTS - 2; i++) {
+            double minimumCircleRadius = minRadiusEnclose(Input.Coordinates[i], Input.Coordinates[i + 1], Input.Coordinates[i + 2]);
+            if (doubleCompare(minimumCircleRadius, Input.Parameters.RADIUS1) != Comptype.GT) {
+                cmv[1] = true;
+                return;
+            }
+        }
+    }
 
     // TODO!
     public static void calcLIC2(){
