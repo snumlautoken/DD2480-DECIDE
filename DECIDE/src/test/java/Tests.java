@@ -111,6 +111,33 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC7(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.Coordinates[3].setLocation(1, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.LENGTH1 = 1.9;
+
+        Input.Parameters.KPTS = 2;
+        CMV.calcLIC7();
+        assertFalse(CMV.cmv[7], "Error: Should be False since KPTS=2");
+
+        Input.Parameters.KPTS = 1;
+        CMV.calcLIC7();
+        assertTrue(CMV.cmv[7], "Error: Should be True since KPTS=1");
+
+        Input.Parameters.KPTS = 2;
+        Input.Parameters.LENGTH1 = 1;
+        CMV.calcLIC7();
+        assertFalse(CMV.cmv[7], "Error: LIC7 should be false");
+
+        Input.Parameters.LENGTH1 = 0.9;
+        CMV.calcLIC7();
+        assertTrue(CMV.cmv[7], "Error: LIC7 should be true");
+    }
+
+    @Test
     public void TestLIC8() {
         // Obtuse triangle
         Input.Parameters.APTS = 1;
