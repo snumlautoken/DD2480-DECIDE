@@ -183,10 +183,11 @@ public class CMV{
 
         for (int i = 0; i < Input.NUMPOINTS-2 - Input.Parameters.EPTS - Input.Parameters.FPTS; i++) {
             double edge1 = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.EPTS+1]);
-            double edge2 = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.FPTS+2]);
-            double edge3 = Input.Coordinates[i+Input.Parameters.EPTS+1].distance(Input.Coordinates[i+Input.Parameters.FPTS+2]);
+            double edge2 = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.EPTS+Input.Parameters.FPTS+2]);
+            double edge3 = Input.Coordinates[i+Input.Parameters.EPTS+1].distance(Input.Coordinates[i+Input.Parameters.EPTS+Input.Parameters.FPTS+2]);
             double s = (edge1 + edge2 + edge3) / 2;
-            double area = Math.sqrt((s*(s-edge1)) * (s*(s-edge2)) * (s*(s-edge3)));
+            double area = Math.sqrt(s*(s-edge1)*(s-edge2)*(s-edge3));
+            System.out.println(edge1 + " " + edge2 + " " + edge3 + " " + area);
             if (doubleCompare(area, Input.Parameters.AREA1) == Comptype.GT) {
                 cmv[10] = true;
                 return;
