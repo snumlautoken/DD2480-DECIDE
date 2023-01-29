@@ -112,8 +112,15 @@ public class CMV{
     // TODO!
     public static void calcLIC4(){}
 
-    // TODO!
-    public static void calcLIC5(){}
+    public static void calcLIC5(){
+        cmv[5] = false;
+        for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
+            if (doubleCompare(Input.Coordinates[i + 1].getX() - Input.Coordinates[i].getX(), 0) == Comptype.LT) {
+                cmv[5] = true;
+                return;
+            }
+        }
+    }
 
     // TODO!
     public static void calcLIC6(){}
