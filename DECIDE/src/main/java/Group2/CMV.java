@@ -128,23 +128,7 @@ public class CMV{
         }
         // Calculate minimum radius for enclosing triangle
         for (int i = 0; i < Input.NUMPOINTS-2-Input.Parameters.APTS-Input.Parameters.BPTS; i++) {
-            double rad;
-            double a = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.APTS+1]);
-            double b = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2]);
-            double c = Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2].distance(Input.Coordinates[i+Input.Parameters.APTS+1]);
-            double sides[] = new double[3];
-            sides[0] = a;
-            sides[1] = b;
-            sides[2] = c;
-            Arrays.sort(sides);
-            // Obtuse triangle => longest side is diameter of smallest possible circle
-            if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
-                rad = sides[2]/2;
-            }
-            // Otherwise => circumcircle is smallest possible circle
-            else {
-                rad = (a*b*c)/Math.sqrt((a+b+c)*(b+c-a)*(c+a-b)*(a+b-c));
-            }
+            double rad = minRadiusEnclose(Input.Coordinates[i], Input.Coordinates[i+Input.Parameters.APTS+1], Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2]);
             if (doubleCompare(rad, Input.Parameters.RADIUS1) == Comptype.GT) {
                 cmv[8] = true;
                 return;
@@ -166,10 +150,49 @@ public class CMV{
     // TODO!
     public static void calcLIC12(){}
 
-    // TODO!
-    public static void calcLIC13(){}
+    public static void calcLIC13(){
+        cmv[13] = false;
+        if (Input.NUMPOINTS < 5) {
+            return;
+        }
+        boolean rad1 = false;
+        boolean rad2 = false;
+        // Calculate minimum radius for enclosing triangle
+        for (int i = 0; i < Input.NUMPOINTS-2-Input.Parameters.APTS-Input.Parameters.BPTS; i++) {
+            double rad = minRadiusEnclose(Input.Coordinates[i], Input.Coordinates[i+Input.Parameters.APTS+1], Input.Coordinates[i+Input.Parameters.APTS+Input.Parameters.BPTS+2]);
+            if (doubleCompare(rad, Input.Parameters.RADIUS1) == Comptype.GT) {
+                rad1 = true;
+            }
+            if (doubleCompare(rad, Input.Parameters.RADIUS2) != Comptype.GT) {
+                rad2 = true;
+            }
+        }
+
+        cmv[13] = rad1 && rad2;
+
+    }
 
     // TODO!
     public static void calcLIC14(){}
+
+    private static double minRadiusEnclose(Point p1, Point p2, Point p3) {
+        double a = p1.distance(p2);
+        double b = p1.distance(p3);
+        double c = p2.distance(p3);
+        double sides[] = new double[3];
+        sides[0] = a;
+        sides[1] = b;
+        sides[2] = c;
+        Arrays.sort(sides);
+        // Obtuse triangle => longest side is diameter of smallest possible circle
+        if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
+            return sides[2]/2;
+        }
+        // Otherwise => circumcircle is smallest possible circle
+        else {
+            return (a*b*c)/Math.sqrt((a+b+c)*(b+c-a)*(c+a-b)*(a+b-c));
+        }
+
+    }
 
 }
