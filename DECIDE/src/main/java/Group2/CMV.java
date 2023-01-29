@@ -1,5 +1,8 @@
 package Group2;
 
+import javax.swing.text.Document;
+import java.awt.*;
+
 public class CMV{
 
     /*
@@ -34,8 +37,16 @@ public class CMV{
         calcLIC14();
     }
 
-    // TODO!
-    public static void calcLIC0(){}
+   // MUST USE DOUBLE COMPARE IN IF STATEMENT
+    public static void calcLIC0(){
+        // for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
+        //     Comptype CT = C
+        //     if (Input.Coordinates[i].distance(Input.Coordinates[i+1]) > Input.Parameters.LENGTH1) {
+        //         return true;
+        //     }
+        // }
+        // return false;
+    }
 
     // TODO!
     public static void calcLIC1(){}
