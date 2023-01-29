@@ -222,6 +222,34 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC10(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(0, 3);
+        Input.Coordinates[3].setLocation(2, 1);
+        Input.Coordinates[4].setLocation(4, 0);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.AREA1 = 5;
+        CMV.calcLIC10();
+        assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area between points 0,2,4 is 6 which is larger than 5");
+
+        Input.Parameters.AREA1 = 7;
+        CMV.calcLIC10();
+        assertTrue(!CMV.cmv[10], "Error! LIC0 should be false since the area between points 0,2,4 is 6 which is smaller than 7");
+
+        Input.Coordinates[5].setLocation(2, 1);
+        Input.Coordinates[6].setLocation(4, 20);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.EPTS = 2;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.AREA1 = 7;
+        CMV.calcLIC10();
+        assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area surely is larger than 5 when the last coordinate is involved");
+    }
+
+    @Test
     public void TestLIC13() {
         // Obtuse triangle
         Input.Parameters.APTS = 1;
