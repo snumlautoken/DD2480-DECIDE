@@ -209,8 +209,8 @@ public class CMV{
             return 0;
 
         Arrays.sort(sides);
-        // Obtuse triangle => longest side is diameter of smallest possible circle
-        if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
+        // Obtuse or right triangle => longest side is diameter of smallest possible circle
+        if (sides[2]*sides[2] >= sides[1]*sides[1] + sides[0]*sides[0]) {
             return sides[2]/2;
         }
         // Otherwise => circumcircle is smallest possible circle
