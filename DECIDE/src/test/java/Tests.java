@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 public class Tests {
 
     @BeforeAll
-    public static void setUpCoordinates() {
+    public static void setUp() {
         for (int i = 0; i < 100; i++) {
             Input.Coordinates[i] = new Point();
         }
@@ -52,7 +52,7 @@ public class Tests {
 
     // Add more tests when more LICS are available
     @Test
-    public void TestDecide() {
+    public void TestDecide() throws Exception {
         for (int i = 0; i < 15; i++) {
             for (int j = i; j < 15; j++) {
                 Input.LCM[i][j] = Connector.NOTUSED;
@@ -65,13 +65,17 @@ public class Tests {
         Input.LCM[8][3] = Connector.ORR;
         Input.PUV[3] = true;
         Input.PUV[8] = true;
+        defaultInputs();
 
         Input.Coordinates[0].setLocation(5, 6);
         Input.Coordinates[1].setLocation(1, 1);
         Input.Coordinates[2].setLocation(100, 100);
-        Input.NUMPOINTS = 3;
-        Input.Parameters.AREA1 = 1;
-        Input.Parameters.RADIUS1 = 1;
+        Input.Coordinates[3].setLocation(300, 300);
+        Input.Coordinates[4].setLocation(400, 400);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.AREA1 = 100000;
+        Input.Parameters.RADIUS1 = 1;        
+        Input.Parameters.RADIUS2 = 2;
         Input.Parameters.EPSILON = 0.0;
         DECIDE.decide();
         assertTrue(DECIDE.launch, "Error: decide gives false when true");
@@ -432,5 +436,26 @@ public class Tests {
         assertTrue(CMV.cmv[13], "Error: Obtuse LIC8 gives false when true");
     }
 
+    public void defaultInputs() {
+        Input.Parameters.AREA1 = 1;
+        Input.Parameters.RADIUS1 = 1;
+        Input.Parameters.AREA2 = 1;
+        Input.Parameters.RADIUS2 = 1;
+        Input.Parameters.EPSILON = 0.0;
+        Input.Parameters.LENGTH1 = 0.0;
+        Input.Parameters.LENGTH2 = 0.0;
+        Input.Parameters.DIST = 0.0;
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Parameters.CPTS = 1;
+        Input.Parameters.DPTS = 1;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.GPTS = 1;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.KPTS = 1;
+        Input.Parameters.QPTS = 2;
+        Input.Parameters.QUADS = 1;
+    }
 
 }
