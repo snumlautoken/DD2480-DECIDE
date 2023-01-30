@@ -1,11 +1,14 @@
-import Group2.CMV;
-import Group2.Input;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.awt.Point;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import Group2.CMV;
+import Group2.Input;
 
 public class Tests {
 
@@ -136,6 +139,59 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
+
+    @Test
+    public void TestLIC4(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(100, 100);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.QPTS = 5;
+        Input.Parameters.QUADS = 1;
+
+        CMV.calcLIC4();
+        assertFalse(CMV.cmv[4], "Error: Should be false since not enough QPTS");
+
+        Input.Parameters.QPTS = 3;
+        Input.Parameters.QUADS = 3;
+        CMV.calcLIC4();
+        assertFalse(CMV.cmv[4], "Error: Not enough QUADS");
+
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(-1, 0);
+        Input.Coordinates[2].setLocation(0, -1);
+        Input.Coordinates[3].setLocation(-2, 1);
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 4;
+        Input.Parameters.QUADS = 4;
+        CMV.calcLIC4();
+        assertFalse(CMV.cmv[4], "Error: Does not calculate all QUADS");
+
+        Input.Coordinates[0].setLocation(0, 0); //Q1
+        Input.Coordinates[1].setLocation(0, 0); //Q1
+        Input.Coordinates[2].setLocation(1, 1); //Q1
+        Input.Coordinates[3].setLocation(-1, -1); //Q4
+        Input.Coordinates[4].setLocation(-1, 0); //Q2
+        Input.Coordinates[5].setLocation(-100, -0.5); //Q4
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 3;
+        Input.Parameters.QUADS = 2;
+        CMV.calcLIC4();
+        assertTrue(CMV.cmv[4], "Calculates correct amount of QUADS with multiple data points");
+
+        Input.Coordinates[0].setLocation(0, 0); //Q1
+        Input.Coordinates[1].setLocation(-1, 0); //Q2
+        Input.Coordinates[2].setLocation(0, -1); //Q3
+        Input.Coordinates[3].setLocation(-1, -1); //Q4
+        Input.Coordinates[4].setLocation(0, 1); //Q1
+        Input.Coordinates[5].setLocation(-100, -0.5); //Q4
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 6;
+        Input.Parameters.QUADS = 3;
+        CMV.calcLIC4();
+        assertTrue(CMV.cmv[4], "Calculates correct amount of quads with corner cases");
+    }
+
 
     @Test
     public void TestLIC7(){
