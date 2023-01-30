@@ -19,7 +19,7 @@ public class Input {
 
     /** The number of planar data points. */
     public static int NUMPOINTS;
-    /** Array containing the coordinates of data points. */
+    /** Array containing the coordinates of data points. setLocation(x,y) will need to be called to initialize actual coordinates */
     public static Point[] Coordinates = new Point[100];
 
     /** Logical Connector Matrix. */
