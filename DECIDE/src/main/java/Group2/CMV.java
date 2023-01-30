@@ -211,7 +211,20 @@ public class CMV{
     public static void calcLIC10(){}
 
     // TODO!
-    public static void calcLIC11(){}
+    public static void calcLIC11(){
+        cmv[11] = false;
+
+        if (Input.NUMPOINTS < 3 || Input.Parameters.GPTS < 1 || Input.Parameters.GPTS > Input.NUMPOINTS - 2) return;
+
+        for (int i = 0; i < Input.NUMPOINTS - 1 - Input.Parameters.GPTS; i++) {
+            if (doubleCompare(Input.Coordinates[i+Input.Parameters.GPTS+1].getX() - Input.Coordinates[i].getX(), 0) == Comptype.LT) {
+                System.out.println(Input.Coordinates[i+Input.Parameters.GPTS+1].getX() + " - " + Input.Coordinates[i].getX());
+                cmv[11] = true;
+                return;
+            }
+        }
+
+    }
 
     // TODO!
     public static void calcLIC12(){
