@@ -1,14 +1,18 @@
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
 
+import Group2.CMV;
+import Group2.DECIDE;
+import Group2.Input;
+import Group2.Input.Connector;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import Group2.CMV;
-import Group2.Input;
 
 public class Tests {
 
@@ -46,6 +50,37 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
 
+    // Add more tests when more LICS are available
+    @Test
+    public void TestDecide() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = i; j < 15; j++) {
+                Input.LCM[i][j] = Connector.NOTUSED;
+                Input.LCM[j][i] = Input.LCM[i][j];
+            }
+            Input.PUV[i] = false;
+        }
+
+        Input.LCM[3][8] = Connector.ORR;
+        Input.LCM[8][3] = Connector.ORR;
+        Input.PUV[3] = true;
+        Input.PUV[8] = true;
+
+        Input.Coordinates[0].setLocation(5, 6);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(100, 100);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.AREA1 = 1;
+        Input.Parameters.RADIUS1 = 1;
+        Input.Parameters.EPSILON = 0.0;
+        DECIDE.decide();
+        assertTrue(DECIDE.launch, "Error: decide gives false when true");
+        Input.LCM[3][8] = Connector.ANDD;
+        Input.LCM[8][3] = Connector.ANDD;
+        DECIDE.decide();
+        assertFalse(DECIDE.launch, "Error: decide gives true when false");
+    }
+
     @Test
     public void TestLIC1() {
         Input.Parameters.RADIUS1 = -1;
@@ -71,10 +106,10 @@ public class Tests {
 
         CMV.calcLIC1();
         assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
-
     }
+
     @Test
-    public void TestLIC2(){
+    public void TestLIC2() {
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(0, 0);
         Input.Coordinates[2].setLocation(1, 0);
@@ -138,6 +173,63 @@ public class Tests {
         CMV.calcLIC3();
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
+    }
+    @Test
+    public void TestLIC5() {
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0, -1);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(2, 5);
+        Input.Coordinates[4].setLocation(3, 4);
+        Input.NUMPOINTS = 5;
+        CMV.calcLIC5();
+        assertFalse(CMV.cmv[5], "Error: CMV[5] should be false if X is always increasing and positive");
+        Input.Coordinates[3].setLocation(0, 5);
+        CMV.calcLIC5();
+        assertTrue(CMV.cmv[5], "Error: CMV[5] should be true if X[3] is 0 and X[2] is 1");
+    }
+    @Test
+    public void TestLIC6(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 2);
+        Input.Coordinates[2].setLocation(3, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.DIST = 1;
+        CMV.calcLIC6();
+        assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is greater than 1");
+
+        // Height is outside of triangle
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 2);
+        Input.Coordinates[2].setLocation(5, 3);
+        Input.Coordinates[3].setLocation(3, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.NPTS = 4;
+        Input.Parameters.DIST = 4;
+        CMV.calcLIC6();
+        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
+
+        // All points on a line
+        System.out.println("härnu");
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.DIST = 0.5;
+        CMV.calcLIC6();
+        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 0");
+
+         // Endpoints the same
+         Input.Coordinates[0].setLocation(0, 0);
+         Input.Coordinates[1].setLocation(1, 0);
+         Input.Coordinates[2].setLocation(0, 0);
+         Input.NUMPOINTS = 3;
+         Input.Parameters.NPTS = 3;
+         Input.Parameters.DIST = 0.5;
+         CMV.calcLIC6();
+         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is 1");
     }
 
     @Test
@@ -275,6 +367,30 @@ public class Tests {
         Input.NUMPOINTS = 6;
         Input.Parameters.RADIUS1 = 4;
         assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+    }
+
+    @Test
+    public void TestLIC12(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0.5, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.Coordinates[3].setLocation(1, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.LENGTH1 = 0.9;
+        Input.Parameters.LENGTH2 = 0.9;
+        Input.Parameters.KPTS = 2;
+        CMV.calcLIC12();
+        assertFalse(CMV.cmv[12], "Error: Should be False");
+
+        Input.Parameters.LENGTH2 = 1.1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be True");
+
+        Input.Parameters.LENGTH1 = 1.9;
+        Input.Parameters.LENGTH2 = 0.6;
+        Input.Parameters.KPTS = 1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be true");
     }
 
     @Test
