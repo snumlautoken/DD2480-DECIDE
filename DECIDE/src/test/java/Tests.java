@@ -136,7 +136,20 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
-
+    @Test
+    public void TestLIC5() {
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0, -1);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(2, 5);
+        Input.Coordinates[4].setLocation(3, 4);
+        Input.NUMPOINTS = 5;
+        CMV.calcLIC5();
+        assertFalse(CMV.cmv[5], "Error: CMV[5] should be false if X is always increasing and positive");
+        Input.Coordinates[3].setLocation(0, 5);
+        CMV.calcLIC5();
+        assertTrue(CMV.cmv[5], "Error: CMV[5] should be true if X[3] is 0 and X[2] is 1");
+    }
     @Test
     public void TestLIC7(){
         Input.Coordinates[0].setLocation(0, 0);
