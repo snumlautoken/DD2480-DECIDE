@@ -121,58 +121,8 @@ public class CMV{
         cmv[3] = false;
     }
 
-    // Calculates LIC4
-    public static void calcLIC4(){
-        cmv[4] = false;
-
-        //Checks that there are more NUMPOINTS than QPTS, as the LIC is only true if a set of QPTS data points have been evaluated.
-        if (Input.NUMPOINTS < Input.Parameters.QPTS) {
-            return;
-        }
-
-        //Boolean array set to true if any of the coordinates are in the quadrant
-        boolean[] quadrants = new boolean[4];
-        int count = 0;
-
-        //Checks QPTS consecutive NUMPOINTS to see which quadrant they are in
-        for(int i = 0; i < Input.NUMPOINTS-Input.Parameters.QPTS; i++) {
-            for(int j = 0; j < Input.Parameters.QPTS; j++ ) {
-                Point p = Input.Coordinates[i+j];
-                double x = p.getX();
-                double y = p.getY();
-                
-                //Evaluates which quadrant the coordinate is in
-                if(x >= 0) {
-                    if(y >= 0) {
-                        quadrants[0] = true;
-                    } else {
-                        quadrants[2] = true;
-                    }
-                } else {
-                    if(y >= 0) {
-                        quadrants[1] = true;
-                    } else {
-                        quadrants[3] = true;
-                    }
-                }
-            }
-        }
-
-        //Counts how many unique quadrants there were data points in 
-        for (boolean q : quadrants) {
-            if(q) {
-                count += 1;
-            }
-        }
-
-        //If the count exceeds the number of required QUADS, the LIC is evaluated as true.
-        if(count > Input.Parameters.QUADS) {
-            cmv[4] = true;
-            return;
-        } else {
-            return;
-        }
-    }
+    // TODO!
+    public static void calcLIC4(){}
 
     // TODO!
     public static void calcLIC5(){}
