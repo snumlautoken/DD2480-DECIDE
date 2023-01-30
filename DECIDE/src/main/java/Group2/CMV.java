@@ -127,8 +127,38 @@ public class CMV{
     // TODO!
     public static void calcLIC5(){}
 
-    // TODO!
-    public static void calcLIC6(){}
+    
+    public static void calcLIC6(){
+        cmv[6] = false;
+
+        if (Input.NUMPOINTS < 3 || Input.Parameters.NPTS < 3 || Input.Parameters.NPTS > Input.NUMPOINTS || Input.Parameters.DIST < 0) return;
+
+        for (int i = 0; i < Input.NUMPOINTS-Input.Parameters.NPTS + 1; i++) {
+            
+            double edges[] = new double[3];
+            edges[0] = Input.Coordinates[i].distance(Input.Coordinates[i+Input.Parameters.NPTS-1]);
+
+            for (int j = 1; j < Input.Parameters.NPTS-1; j++) { // Exclude first and last point
+                if (edges[0] == 0) {
+                    if (doubleCompare(Input.Coordinates[i].distance(Input.Coordinates[i+j]), Input.Parameters.DIST) == Comptype.GT) {
+                        cmv[6] = true;
+                        return;
+                    }
+                } else {
+                    edges[1] = Input.Coordinates[i].distance(Input.Coordinates[i+j]);
+                    edges[2] = Input.Coordinates[i+Input.Parameters.NPTS-1].distance(Input.Coordinates[i+j]);
+                    double s = (edges[0] + edges[1] + edges[2]) / 2;
+                    double area = Math.sqrt(s*(s-edges[0])*(s-edges[1])*(s-edges[2]));
+                    double height = (2 * area) / edges[0]; // height of triangle
+
+                    if (doubleCompare(height, Input.Parameters.DIST) == Comptype.GT) {
+                        cmv[6] = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * There exists at least one set of two data points separated by exactly KPTS consecutive intervening points 

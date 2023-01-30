@@ -68,8 +68,8 @@ public class Tests {
 
         CMV.calcLIC1();
         assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
-
     }
+
     @Test
     public void TestLIC2(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -135,6 +135,50 @@ public class Tests {
         CMV.calcLIC3();
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
+    }
+
+    @Test
+    public void TestLIC6(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 2);
+        Input.Coordinates[2].setLocation(3, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.DIST = 1;
+        CMV.calcLIC6();
+        assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is greater than 1");
+
+        // Height is outside of triangle
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 2);
+        Input.Coordinates[2].setLocation(5, 3);
+        Input.Coordinates[3].setLocation(3, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.NPTS = 4;
+        Input.Parameters.DIST = 4;
+        CMV.calcLIC6();
+        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
+
+        // All points on a line
+        System.out.println("härnu");
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.DIST = 0.5;
+        CMV.calcLIC6();
+        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 0");
+
+         // Endpoints the same
+         Input.Coordinates[0].setLocation(0, 0);
+         Input.Coordinates[1].setLocation(1, 0);
+         Input.Coordinates[2].setLocation(0, 0);
+         Input.NUMPOINTS = 3;
+         Input.Parameters.NPTS = 3;
+         Input.Parameters.DIST = 0.5;
+         CMV.calcLIC6();
+         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is 1");
     }
 
     @Test
