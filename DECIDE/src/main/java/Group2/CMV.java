@@ -53,8 +53,19 @@ public class CMV{
         calcLIC14();
     }
 
-    // TODO!
-    public static void calcLIC0(){}
+   // TODO!
+    public static void calcLIC0(){
+        cmv[0] = false;
+
+        if (Input.NUMPOINTS < 2) return;
+
+        for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
+            if (doubleCompare(Input.Coordinates[i].distance(Input.Coordinates[i+1]), Input.Parameters.LENGTH1) == Comptype.GT) {
+                cmv[0] = true;
+                return;
+            }
+        }
+    }
 
 
     public static void calcLIC1(){

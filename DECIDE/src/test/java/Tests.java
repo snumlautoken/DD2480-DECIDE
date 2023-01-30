@@ -82,6 +82,24 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC0(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.NUMPOINTS = 2;
+        Input.Parameters.LENGTH1 = 0.0;
+
+        CMV.calcLIC0();
+        assertTrue(CMV.cmv[0], "Error! LIC0 should be true since the distance is larger than 0");
+
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.LENGTH1 = 4.0;
+        CMV.calcLIC0();
+        assertTrue(!CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 4");
+    }
+
+
+    @Test
     public void TestLIC1() {
         Input.Parameters.RADIUS1 = -1;
         Input.NUMPOINTS = 3;
