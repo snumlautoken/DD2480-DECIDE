@@ -192,6 +192,7 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
+
     @Test
     public void TestLIC5() {
         Input.Coordinates[0].setLocation(0, 0);
@@ -206,6 +207,7 @@ public class Tests {
         CMV.calcLIC5();
         assertTrue(CMV.cmv[5], "Error: CMV[5] should be true if X[3] is 0 and X[2] is 1");
     }
+
     @Test
     public void TestLIC6(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -229,7 +231,6 @@ public class Tests {
         assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
 
         // All points on a line
-        System.out.println("härnu");
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(2, 0);
@@ -385,6 +386,29 @@ public class Tests {
         Input.NUMPOINTS = 6;
         Input.Parameters.RADIUS1 = 4;
         assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+    }
+
+    @Test
+    public void TestLIC11() {
+        Input.Coordinates[0].setLocation(2, 0);
+        Input.Coordinates[1].setLocation(0, 0);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.GPTS = 1;
+        CMV.calcLIC11();
+        assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[0] is larger than X[2]");
+
+        Input.Coordinates[3].setLocation(2, 0);
+        Input.Coordinates[4].setLocation(0, 0);
+        Input.Coordinates[5].setLocation(0, 1);
+        Input.NUMPOINTS = 6;
+        Input.Parameters.GPTS = 2;
+        CMV.calcLIC11();
+        assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[2] is larger than X[5]");
+
+        Input.Coordinates[5].setLocation(2, 0);
+        CMV.calcLIC11();
+        assertTrue(!CMV.cmv[11], "Error: LIC11 should be false");
     }
 
     @Test
