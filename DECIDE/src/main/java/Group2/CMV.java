@@ -56,7 +56,7 @@ public class CMV{
     // TODO!
     public static void calcLIC0(){}
 
-    // TODO!
+
     public static void calcLIC1(){
         cmv[1] = false;
         if (Input.NUMPOINTS < 3 || doubleCompare(Input.Parameters.RADIUS1, 0) == Comptype.LT)
@@ -71,7 +71,7 @@ public class CMV{
         }
     }
 
-    // TODO!
+
     public static void calcLIC2(){
         cmv[2] = false;
 
@@ -137,11 +137,7 @@ public class CMV{
     // TODO!
     public static void calcLIC6(){}
 
-    /**
-     * There exists at least one set of two data points separated by exactly KPTS consecutive intervening points 
-     * that are a distance greater than the length, LENGTH1, apart. 
-     * The condition is not met when NUMPOINTS < 3
-     */
+
     public static void calcLIC7(){
         cmv[7] = false;
 
