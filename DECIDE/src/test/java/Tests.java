@@ -62,6 +62,33 @@ public class Tests {
 
 
     @Test
+    public void TestLIC1() {
+        Input.Parameters.RADIUS1 = -1;
+        Input.NUMPOINTS = 3;
+        Input.Coordinates[0].setLocation(1, 1);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(1, 1);
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if Radius1 is less than 0");
+
+        Input.Parameters.RADIUS1 = 1;
+        Input.NUMPOINTS = 2;
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if NUMPOINTS is less than 3");
+
+        Input.NUMPOINTS = 3;
+        CMV.calcLIC1();
+        assertTrue(CMV.cmv[1], "Error: CMV1 should be set to true with three points on the same coordinate");
+
+        Input.Coordinates[2].setLocation(8, 8);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.NUMPOINTS = 4;
+
+        CMV.calcLIC1();
+        assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
+    }
+
+    @Test
     public void TestLIC2(){
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(0, 0);
@@ -127,6 +154,46 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
+    @Test
+    public void TestLIC5() {
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0, -1);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(2, 5);
+        Input.Coordinates[4].setLocation(3, 4);
+        Input.NUMPOINTS = 5;
+        CMV.calcLIC5();
+        assertFalse(CMV.cmv[5], "Error: CMV[5] should be false if X is always increasing and positive");
+        Input.Coordinates[3].setLocation(0, 5);
+        CMV.calcLIC5();
+        assertTrue(CMV.cmv[5], "Error: CMV[5] should be true if X[3] is 0 and X[2] is 1");
+    }
+    @Test
+    public void TestLIC7(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.Coordinates[3].setLocation(1, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.LENGTH1 = 1.9;
+
+        Input.Parameters.KPTS = 2;
+        CMV.calcLIC7();
+        assertFalse(CMV.cmv[7], "Error: Should be False since KPTS=2");
+
+        Input.Parameters.KPTS = 1;
+        CMV.calcLIC7();
+        assertTrue(CMV.cmv[7], "Error: Should be True since KPTS=1");
+
+        Input.Parameters.KPTS = 2;
+        Input.Parameters.LENGTH1 = 1;
+        CMV.calcLIC7();
+        assertFalse(CMV.cmv[7], "Error: LIC7 should be false");
+
+        Input.Parameters.LENGTH1 = 0.9;
+        CMV.calcLIC7();
+        assertTrue(CMV.cmv[7], "Error: LIC7 should be true");
+    }
 
     @Test
     public void TestLIC8() {
@@ -183,6 +250,30 @@ public class Tests {
         Input.NUMPOINTS = 6;
         Input.Parameters.RADIUS1 = 4;
         assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+    }
+
+    @Test
+    public void TestLIC12(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(0.5, 0);
+        Input.Coordinates[2].setLocation(2, 0);
+        Input.Coordinates[3].setLocation(1, 0);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.LENGTH1 = 0.9;
+        Input.Parameters.LENGTH2 = 0.9;
+        Input.Parameters.KPTS = 2;
+        CMV.calcLIC12();
+        assertFalse(CMV.cmv[12], "Error: Should be False");
+
+        Input.Parameters.LENGTH2 = 1.1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be True");
+
+        Input.Parameters.LENGTH1 = 1.9;
+        Input.Parameters.LENGTH2 = 0.6;
+        Input.Parameters.KPTS = 1;
+        CMV.calcLIC12();
+        assertTrue(CMV.cmv[12], "Error: Should be true");
     }
 
     @Test

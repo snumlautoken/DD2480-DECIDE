@@ -67,10 +67,22 @@ public class CMV{
         }
     }
 
-    // TODO!
-    public static void calcLIC1(){}
 
-    // TODO!
+    public static void calcLIC1(){
+        cmv[1] = false;
+        if (Input.NUMPOINTS < 3 || doubleCompare(Input.Parameters.RADIUS1, 0) == Comptype.LT)
+            return;
+
+        for (int i = 0; i < Input.NUMPOINTS - 2; i++) {
+            double minimumCircleRadius = minRadiusEnclose(Input.Coordinates[i], Input.Coordinates[i + 1], Input.Coordinates[i + 2]);
+            if (doubleCompare(minimumCircleRadius, Input.Parameters.RADIUS1) != Comptype.GT) {
+                cmv[1] = true;
+                return;
+            }
+        }
+    }
+
+
     public static void calcLIC2(){
         cmv[2] = false;
 
@@ -123,14 +135,38 @@ public class CMV{
     // TODO!
     public static void calcLIC4(){}
 
-    // TODO!
-    public static void calcLIC5(){}
+    public static void calcLIC5(){
+        cmv[5] = false;
+        for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
+            if (doubleCompare(Input.Coordinates[i + 1].getX() - Input.Coordinates[i].getX(), 0) == Comptype.LT) {
+                cmv[5] = true;
+                return;
+            }
+        }
+    }
 
     // TODO!
     public static void calcLIC6(){}
 
-    // TODO!
-    public static void calcLIC7(){}
+
+    public static void calcLIC7(){
+        cmv[7] = false;
+
+        if(Input.NUMPOINTS < 3) return;
+
+        if(Input.Parameters.KPTS < 1 || Input.Parameters.KPTS > (Input.NUMPOINTS - 2)) return;
+        
+        for (int i = 0; i < Input.NUMPOINTS-Input.Parameters.KPTS-1; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+Input.Parameters.KPTS+1]; // Point separated by KPTS points
+
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH1) == Comptype.GT){
+                cmv[7] = true;
+                break;
+            }
+        }
+
+    }
 
     public static void calcLIC8(){
         if (Input.NUMPOINTS < 5) {
@@ -159,7 +195,31 @@ public class CMV{
     public static void calcLIC11(){}
 
     // TODO!
-    public static void calcLIC12(){}
+    public static void calcLIC12(){
+        cmv[12] = false;
+
+        if(Input.NUMPOINTS < 3) return;
+
+        if(Input.Parameters.KPTS < 1 || Input.Parameters.KPTS > (Input.NUMPOINTS - 2)) return;
+        
+        boolean GT = false;
+        boolean LT = false;
+
+        for (int i = 0; i < Input.NUMPOINTS-Input.Parameters.KPTS-1; i++) {
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+Input.Parameters.KPTS+1]; // Point separated by KPTS points
+
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH1) == Comptype.GT) {
+                GT = true;
+            }
+
+            if(doubleCompare(p1.distance(p2), Input.Parameters.LENGTH2) == Comptype.LT) {
+                LT = true;
+            }
+        }
+
+        if(GT&&LT) cmv[12] = true;
+    }
 
     public static void calcLIC13(){
         cmv[13] = false;
@@ -194,9 +254,13 @@ public class CMV{
         sides[0] = a;
         sides[1] = b;
         sides[2] = c;
+        
+        if (a == 0 && b == 0 && c == 0)
+            return 0;
+
         Arrays.sort(sides);
-        // Obtuse triangle => longest side is diameter of smallest possible circle
-        if (sides[2]*sides[2] > sides[1]*sides[1] + sides[0]*sides[0]) {
+        // Obtuse or right triangle => longest side is diameter of smallest possible circle
+        if (sides[2]*sides[2] >= sides[1]*sides[1] + sides[0]*sides[0]) {
             return sides[2]/2;
         }
         // Otherwise => circumcircle is smallest possible circle
