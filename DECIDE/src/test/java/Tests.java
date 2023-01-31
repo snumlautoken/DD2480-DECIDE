@@ -50,7 +50,10 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
 
-    // Add more tests when more LICS are available
+    /**
+     * Tests that PUV and LCM work together as expected with a positive and a negative test respectively.
+     * Also test if exception is thrown in case of incorrect input data.
+     */
     @Test
     public void TestDecide() throws Exception {
         for (int i = 0; i < 15; i++) {
@@ -157,6 +160,12 @@ public class Tests {
         assertTrue(CMV.cmv[2], "Error! LIC2 should be true since the angle is slightly less than PI");
     }
 
+    /**
+     * First test checks if true is yielded when conditions are met for minimum input.
+     * Second test checks if false is yielded when conditions are not met for multiple input.
+     * Third test checks if true is yielded when conditions are met for multiple input.
+     * Fourth test checks if false is yielded when NUMPOINTS is insufficient.
+     */
     @Test
     public void TestLIC3() {
         Input.Coordinates[0].setLocation(5, 6);
@@ -335,6 +344,13 @@ public class Tests {
         assertTrue(CMV.cmv[7], "Error: LIC7 should be true");
     }
 
+    /**
+     * First and second tests checks if false and true respectively is yielded when an insufficient and sufficient obtuse triangle is provided.
+     * Third and fourth tests checks if false and true respectively is yielded when an insufficient and sufficient right triangle is provided.
+     * Fifth and sixth tests checks if false and true respectively is yielded when an insufficient and sufficient acute triangle is provided.
+     * Seventh test checks if true is yielded when number of points are above minimum.
+     */
+
     @Test
     public void TestLIC8() {
         // Obtuse triangle
@@ -466,6 +482,11 @@ public class Tests {
         CMV.calcLIC12();
         assertTrue(CMV.cmv[12], "Error: Should be true");
     }
+
+
+    /**
+     * First and second tests checks if false and true respectively is yielded when an insufficient and sufficient obtuse triangle is provided.
+     */
 
     @Test
     public void TestLIC13() {
