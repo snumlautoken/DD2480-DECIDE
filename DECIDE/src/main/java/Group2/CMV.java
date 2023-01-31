@@ -337,7 +337,45 @@ public class CMV{
     }
 
     // TODO!
-    public static void calcLIC14(){}
+    public static void calcLIC14(){
+
+        cmv[14] = false;
+
+        if(Input.NUMPOINTS < 5){
+            return;
+        }
+
+        boolean GT_area1 = false;
+        boolean LT_area2 = false;
+
+        int E_pos = Input.Parameters.EPTS+1;
+        int F_pos = E_pos + Input.Parameters.FPTS+1;
+
+        for (int i = 0; i < Input.NUMPOINTS-(F_pos); i++) {
+
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+E_pos];
+            Point p3 = Input.Coordinates[i+F_pos];
+
+            Double area = Math.abs(p1.getX()*p2.getY()+p2.getX()*p3.getY() + p3.getX()*p1.getY() - p1.getY()*p2.getX() - p2.getY()*p3.getX() - p3.getY()*p1.getX())/2;
+            if (doubleCompare(area, Input.Parameters.AREA1) == Comptype.GT) {
+                GT_area1 = true;
+            }
+            if (doubleCompare(area, Input.Parameters.AREA2) == Comptype.LT) {
+                LT_area2 = true;
+            }
+            if(GT_area1 && LT_area2){
+                break;
+            }
+        }
+
+        if(GT_area1 && LT_area2){
+            cmv[14] = true;
+        }
+
+        return;
+
+    }
 
     private static double minRadiusEnclose(Point p1, Point p2, Point p3) {
         double a = p1.distance(p2);

@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import Group2.CMV;
 import Group2.DECIDE;
 import Group2.Input;
 import Group2.Input.Connector;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 
 public class Tests {
@@ -454,6 +454,28 @@ public class Tests {
         Input.Parameters.RADIUS2 = 5;
         CMV.calcLIC13();
         assertTrue(CMV.cmv[13], "Error: Obtuse LIC8 gives false when true");
+    }
+
+    @Test
+    public void TestLIC14() {
+        Input.Coordinates[0].setLocation(-1, 1);
+        Input.Coordinates[1].setLocation(-1,-1);
+        Input.Coordinates[2].setLocation(-1,-1);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.Coordinates[4].setLocation(5, 6);
+        Input.Coordinates[5].setLocation(1,-1);
+        Input.Coordinates[6].setLocation(3,-1);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 2;
+        Input.Parameters.AREA1 = 4;
+        Input.Parameters.AREA2 = 4;
+        CMV.calcLIC14();
+        assertFalse(CMV.cmv[14], "Error: LIC14 true when false");
+
+        Input.Parameters.AREA1 = 3;
+        CMV.calcLIC14();
+        assertTrue(CMV.cmv[14], "Error: LIC14 false when true");
     }
 
 
