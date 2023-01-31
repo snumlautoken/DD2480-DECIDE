@@ -388,6 +388,28 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC9(){
+        Input.Parameters.CPTS = 1;
+        Input.Parameters.DPTS = 1;
+        Input.NUMPOINTS = 4;
+        Input.Coordinates[0].setLocation(0, 1);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(0, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(1, 0);
+        Input.Parameters.EPSILON = 0.1;
+        CMV.calcLIC9();
+        assertFalse(CMV.cmv[9], "Error: NUMPOINTS < 5");
+
+        Input.Coordinates[4].setLocation(0, 0.5);
+        Input.Parameters.EPSILON = 0.0;
+        Input.NUMPOINTS = 6;
+        CMV.calcLIC9();
+        assertTrue(CMV.cmv[9], "Error: NUMPOINTS < 5");
+
+    }
+
+    @Test
     public void TestLIC12(){
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(0.5, 0);
