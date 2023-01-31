@@ -1,6 +1,8 @@
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
@@ -52,7 +54,7 @@ public class Tests {
 
     // Add more tests when more LICS are available
     @Test
-    public void TestDecide() throws Exception {
+    public void TestDecide() {
         for (int i = 0; i < 15; i++) {
             for (int j = i; j < 15; j++) {
                 Input.LCM[i][j] = Connector.NOTUSED;
@@ -77,12 +79,14 @@ public class Tests {
         Input.Parameters.RADIUS1 = 1;        
         Input.Parameters.RADIUS2 = 2;
         Input.Parameters.EPSILON = 0.0;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertTrue(DECIDE.launch, "Error: decide gives false when true");
         Input.LCM[3][8] = Connector.ANDD;
         Input.LCM[8][3] = Connector.ANDD;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertFalse(DECIDE.launch, "Error: decide gives true when false");
+        Input.NUMPOINTS = 101;
+        assertThrows(IllegalArgumentException.class, () -> DECIDE.decide());
     }
 
     @Test

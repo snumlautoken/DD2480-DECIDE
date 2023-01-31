@@ -15,7 +15,7 @@ public class DECIDE {
      * Then calculates FUV from PUM and PUV according to spec. 
      * If all values in FUV is true, launch is set to true and function prints "Yes" to console. Otherwise "No" is outputed.
      */
-    public static void decide() throws Exception {
+    public static void decide() throws IllegalArgumentException {
         validateInput();
         CMV.calculate();
         boolean[][] PUM = new boolean[15][15];
@@ -55,10 +55,10 @@ public class DECIDE {
 
     /**
      * Helper function to check if input parameters are valid
-     * @throws Exception
+     * @throws IllegalArgumentException
      */
 
-    private static void validateInput() throws Exception {
+    private static void validateInput() throws IllegalArgumentException {
             isTrue(Input.NUMPOINTS >= 2 && Input.NUMPOINTS <= 100);
             isTrue(Input.Parameters.LENGTH1 >= 0 && Input.Parameters.LENGTH2 >= 0 );
             isTrue(Input.Parameters.EPSILON >= 0 && Input.Parameters.EPSILON < Math.PI);
@@ -77,7 +77,7 @@ public class DECIDE {
 
     /**
      * Helper function to check if boolean expression is true
-     * @throws Exception
+     * @throws IllegalArgumentException
      */
-    private static void isTrue(boolean b) throws Exception {if (!b) {throw new Exception("INVALID INPUT");}}
+    private static void isTrue(boolean b) throws IllegalArgumentException {if (!b) {throw new IllegalArgumentException("INVALID INPUT");}}
 }
