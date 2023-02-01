@@ -317,7 +317,7 @@ public class CMV{
 
         cmv[8] = false;
     }
-
+    
     /**
      * Sets cmv[9] to true if there exists at least one set of three data points separated by exactly C PTS and D PTS
         consecutive intervening points, respectively, that form an angle such that:
@@ -328,8 +328,38 @@ public class CMV{
         point or the last point (or both) coincide with the vertex, the angle is undefined and the LIC
         is not satisfied by those three points. When NUMPOINTS < 5, the condition is not met.
      */
-    // TODO!
-    public static void calcLIC9(){}
+      public static void calcLIC9(){
+        cmv[9] = false;
+
+        if(Input.NUMPOINTS < 5){
+            return;
+        }
+
+        for (int i = 0; i < Input.NUMPOINTS-(Input.Parameters.CPTS+Input.Parameters.DPTS+2); i++) {
+            int bn = Input.Parameters.CPTS+1;
+            int bn2 = bn + Input.Parameters.DPTS+1;
+
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+bn];
+            Point p3 = Input.Coordinates[i+bn2];
+
+            // If either the first point or the last point (or both) coincides with the vertex, the angle is undefined
+            if((doubleCompare(p1.x, p2.x)==Comptype.EQ&&doubleCompare(p1.y, p2.y)==Comptype.EQ)
+             ||(doubleCompare(p2.x, p3.x)==Comptype.EQ&&doubleCompare(p2.y, p3.y)==Comptype.EQ)){
+                continue;
+            }
+            
+            double angle = Math.acos((Math.pow(p2.distance(p1), 2)+Math.pow(p2.distance(p3), 2)-Math.pow(p1.distance(p3), 2))/
+            (2*p2.distance(p1)*p2.distance(p3)));
+            
+            if(doubleCompare(angle, Math.PI-Input.Parameters.EPSILON)==Comptype.LT || doubleCompare(angle, Math.PI+Input.Parameters.EPSILON)==Comptype.GT){
+                cmv[9] = true;
+                break;
+            }
+        }
+        return;
+
+    }
 
     /** Sets cmv[10] to true if there exists at least one set of three data points separated by exactly E PTS and F PTS consecutive intervening points, respectively, that are the vertices of a triangle with area greater
      * than AREA1. The condition is not met when NUMPOINTS < 5. */
