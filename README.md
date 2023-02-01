@@ -29,3 +29,8 @@
 - Wrote LIC 1 and 5 and tests for those  
 - Wrote a number of small issues that came up on the way  
 - Reviewed a number of pull requests and merged  
+
+#### Olivia
+- Wrote LIC 4, 9 & 14
+- Wrote tests and documentation for the same LICs
+- Reviewed & merged pull requests
