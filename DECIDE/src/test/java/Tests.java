@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 
 public class Tests {
 
+    /**
+     * Initialize all 100 coordinates to simplify testing.
+     */
     @BeforeAll
     public static void setUp() {
         for (int i = 0; i < 100; i++) {
@@ -25,6 +28,7 @@ public class Tests {
 
     /**
      * Tests that all input is set- and gettable.
+     * Simple tests making sure the coordinaates, LCM and PUV variables in the input works as intended while testing.
      */
     @Test
     public void TestInput() {
@@ -39,7 +43,16 @@ public class Tests {
 
 
     }
-
+    
+    /**
+     * Test the CVM doubleCompare helper method.
+     * 1: Test Greater Than with positive values
+     * 2: Test Greater Than Works with negative values
+     * 3: Test Lesser Than Works with positive values
+     * 4: Test Lesser Than works with negative values with small difference)
+     * 5: Test equals works with equal values 
+     * 6: Test equals works with very close values as according to the spec.
+     */
     @Test
     public void testCMVDoubleCompare() {
         assertEquals(CMV.Comptype.GT, CMV.doubleCompare(5, 3.5), "Error: CMV doubleCompare 5 expected to be GT 3.5");
@@ -114,7 +127,13 @@ public class Tests {
         assertFalse(CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 4");
     }
 
-
+    /**
+     * Test the calculation of LIC1 (bit 1 in the CMV)
+     * 1: Test whether a negative RADIUS1 yields false
+     * 2: Test that NUMPOINTS < 3 yields false
+     * 3: Test if 3 points in the same location yields true
+     * 4: Test that 3 non-consequtive points in the same location yields false
+     */
     @Test
     public void TestLIC1() {
         Input.Parameters.RADIUS1 = -1;
@@ -214,7 +233,12 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
-
+    
+    /**
+     * Test the calculation of LIC5 (bit 5 in the CMV)
+     * 1: If X-values in the coordinates are always increasing the bit should be set to false
+     * 2: If we change one X-value to make the values not always increase, the bit should be set to true
+     */
     @Test
     public void TestLIC5() {
         Input.Coordinates[0].setLocation(0, 0);
