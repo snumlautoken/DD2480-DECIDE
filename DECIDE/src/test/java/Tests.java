@@ -18,6 +18,9 @@ import Group2.Input.Connector;
 
 public class Tests {
 
+    /**
+     * Initialize all 100 coordinates to simplify testing.
+     */
     @BeforeAll
     public static void setUp() {
         for (int i = 0; i < 100; i++) {
@@ -27,6 +30,7 @@ public class Tests {
 
     /**
      * Tests that all input is set- and gettable.
+     * Simple tests making sure the coordinaates, LCM and PUV variables in the input works as intended while testing.
      */
     @Test
     public void TestInput() {
@@ -41,7 +45,16 @@ public class Tests {
 
 
     }
-
+    
+    /**
+     * Test the CVM doubleCompare helper method.
+     * 1: Test Greater Than with positive values
+     * 2: Test Greater Than Works with negative values
+     * 3: Test Lesser Than Works with positive values
+     * 4: Test Lesser Than works with negative values with small difference)
+     * 5: Test equals works with equal values 
+     * 6: Test equals works with very close values as according to the spec.
+     */
     @Test
     public void testCMVDoubleCompare() {
         assertEquals(CMV.Comptype.GT, CMV.doubleCompare(5, 3.5), "Error: CMV doubleCompare 5 expected to be GT 3.5");
@@ -52,7 +65,10 @@ public class Tests {
         assertEquals(CMV.Comptype.EQ, CMV.doubleCompare(5.000000999, 5), "Error: CMV doubleCompare 5.000000999 expected to be EQ 5");
     }
 
-    // Add more tests when more LICS are available
+    /**
+     * Tests that PUV and LCM work together as expected with a positive and a negative test respectively.
+     * Also test if exception is thrown in case of incorrect input data.
+     */
     @Test
     public void TestDecide() {
         for (int i = 0; i < 15; i++) {
@@ -89,24 +105,36 @@ public class Tests {
         assertThrows(IllegalArgumentException.class, () -> DECIDE.decide());
     }
 
+    /**
+     * Test the calculation of LIC0 (bit 0 in the CMV)
+     * 1: Check if true is yielded when two consecutive points are a distance larger than 0 appart.
+     * 2: Check if false is yielded when all pairs of consecutive points are a distance smaller than 4 appart.
+     */
     @Test
     public void TestLIC0(){
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.NUMPOINTS = 2;
         Input.Parameters.LENGTH1 = 0.0;
-
         CMV.calcLIC0();
         assertTrue(CMV.cmv[0], "Error! LIC0 should be true since the distance is larger than 0");
 
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(1, 1);
         Input.NUMPOINTS = 3;
         Input.Parameters.LENGTH1 = 4.0;
         CMV.calcLIC0();
-        assertTrue(!CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 4");
+        assertFalse(CMV.cmv[0], "Error! LIC0 should be false since the distances are smaller than 4");
     }
 
-
+    /**
+     * Test the calculation of LIC1 (bit 1 in the CMV)
+     * 1: Test whether a negative RADIUS1 yields false
+     * 2: Test that NUMPOINTS < 3 yields false
+     * 3: Test if 3 points in the same location yields true
+     * 4: Test that 3 non-consequtive points in the same location yields false
+     */
     @Test
     public void TestLIC1() {
         Input.Parameters.RADIUS1 = -1;
@@ -134,6 +162,13 @@ public class Tests {
         assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
     }
 
+    /**
+     * Test the calculation of LIC2 (bit 2 in the CMV)
+     * 1: Check if not true if points coincides. 
+     * 2: Check if true if an angle is less than PI
+     * 3: Check if not true since there is an angle=PI but there is an epsilon.
+     * 4: Check if true, since there is an angle less than PI-epsilon.
+     */
     @Test
     public void TestLIC2() {
         Input.Coordinates[0].setLocation(0, 0);
@@ -161,6 +196,12 @@ public class Tests {
         assertTrue(CMV.cmv[2], "Error! LIC2 should be true since the angle is slightly less than PI");
     }
 
+    /**
+     * First test checks if true is yielded when conditions are met for minimum input.
+     * Second test checks if false is yielded when conditions are not met for multiple input.
+     * Third test checks if true is yielded when conditions are met for multiple input.
+     * Fourth test checks if false is yielded when NUMPOINTS is insufficient.
+     */
     @Test
     public void TestLIC3() {
         Input.Coordinates[0].setLocation(5, 6);
@@ -257,6 +298,11 @@ public class Tests {
         assertTrue(CMV.cmv[4], "Calculates correct amount of quads with corner cases");
     }
 
+    /**
+     * Test the calculation of LIC5 (bit 5 in the CMV)
+     * 1: If X-values in the coordinates are always increasing the bit should be set to false
+     * 2: If we change one X-value to make the values not always increase, the bit should be set to true
+     */
     @Test
     public void TestLIC5() {
         Input.Coordinates[0].setLocation(0, 0);
@@ -272,6 +318,14 @@ public class Tests {
         assertTrue(CMV.cmv[5], "Error: CMV[5] should be true if X[3] is 0 and X[2] is 1");
     }
 
+    /**
+     * Test the calculation of LIC6 (bit 6 in the CMV)
+     * 1: Check if true is yielded when the consecutive point (1, 2) is a distance larger than DIST from the line formed between endpoints.
+     * 2: Check if false is yelded when the consecutive point (5,3) has its closest distance outside of the two endpoints 
+     *    (The line is assumed to be infinite and reach beyond the endpoints), and the closest distance is smaller than DIST.
+     * 3: Check if false is yielded when the consecutive point (1, 0) lies on the line formed by the endpoints, and DIST is larger than 0.
+     * 4: Check if true is yielded when the endpoints have the same coordinates and the consecutive point (1, 0) has a larger distance than DIST from the endpoints.
+     */
     @Test
     public void TestLIC6(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -283,18 +337,15 @@ public class Tests {
         CMV.calcLIC6();
         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is greater than 1");
 
-        // Height is outside of triangle
         Input.Coordinates[0].setLocation(0, 0);
-        Input.Coordinates[1].setLocation(1, 2);
-        Input.Coordinates[2].setLocation(5, 3);
-        Input.Coordinates[3].setLocation(3, 0);
-        Input.NUMPOINTS = 4;
-        Input.Parameters.NPTS = 4;
+        Input.Coordinates[1].setLocation(5, 3);
+        Input.Coordinates[2].setLocation(3, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
         Input.Parameters.DIST = 4;
         CMV.calcLIC6();
-        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
+        assertFalse(CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
 
-        // All points on a line
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(2, 0);
@@ -302,19 +353,22 @@ public class Tests {
         Input.Parameters.NPTS = 3;
         Input.Parameters.DIST = 0.5;
         CMV.calcLIC6();
-        assertTrue(!CMV.cmv[6], "Error! LIC6 should be false since the distance is 0");
+        assertFalse(CMV.cmv[6], "Error! LIC6 should be false since the distance is 0");
 
-         // Endpoints the same
-         Input.Coordinates[0].setLocation(0, 0);
-         Input.Coordinates[1].setLocation(1, 0);
-         Input.Coordinates[2].setLocation(0, 0);
-         Input.NUMPOINTS = 3;
-         Input.Parameters.NPTS = 3;
-         Input.Parameters.DIST = 0.5;
-         CMV.calcLIC6();
-         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is 1");
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(0, 0);
+        Input.NUMPOINTS = 3;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.DIST = 0.5;
+        CMV.calcLIC6();
+        assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is 1");
     }
 
+    /**
+     * Test the calculation of LIC7
+     * Checks if false and true for various distances of points and with varying KPTS.
+     */
     @Test
     public void TestLIC7(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -342,6 +396,12 @@ public class Tests {
         assertTrue(CMV.cmv[7], "Error: LIC7 should be true");
     }
 
+    /**
+     * First and second tests checks if false and true respectively is yielded when an insufficient and sufficient obtuse triangle is provided.
+     * Third and fourth tests checks if false and true respectively is yielded when an insufficient and sufficient right triangle is provided.
+     * Fifth and sixth tests checks if false and true respectively is yielded when an insufficient and sufficient acute triangle is provided.
+     * Seventh test checks if true is yielded when number of points are above minimum.
+     */
     @Test
     public void TestLIC8() {
         // Obtuse triangle
@@ -427,6 +487,12 @@ public class Tests {
 
     }
 
+    /**
+     * Test the calculation of LIC10 (bit 10 in the CMV)
+     * 1: Check if true is yielded when triangle has a larger area than AREA1.
+     * 2: Check if false is yielded when triangle has a smaller area than AREA1.
+     * 3: Check if true is yielded when EPTS and FPTS are different and one of the triangles formed has an area larger than AREA1.
+     */
     @Test
     public void TestLIC10(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -441,10 +507,23 @@ public class Tests {
         CMV.calcLIC10();
         assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area between points 0,2,4 is 6 which is larger than 5");
 
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(0, 3);
+        Input.Coordinates[3].setLocation(2, 1);
+        Input.Coordinates[4].setLocation(4, 0);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 1;
         Input.Parameters.AREA1 = 7;
         CMV.calcLIC10();
-        assertTrue(!CMV.cmv[10], "Error! LIC0 should be false since the area between points 0,2,4 is 6 which is smaller than 7");
+        assertFalse(CMV.cmv[10], "Error! LIC0 should be false since the area between points 0,2,4 is 6 which is smaller than 7");
 
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(0, 3);
+        Input.Coordinates[3].setLocation(2, 1);
+        Input.Coordinates[4].setLocation(4, 0);
         Input.Coordinates[5].setLocation(2, 1);
         Input.Coordinates[6].setLocation(4, 20);
         Input.NUMPOINTS = 7;
@@ -455,6 +534,12 @@ public class Tests {
         assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area surely is larger than 5 when the last coordinate is involved");
     }
     
+    /**
+     * Test the calculation of LIC11 (bit 11 in the CMV)
+     * 1: Check if true is yielded when when X[i] is larger than X[j] and i < j.
+     * 2: Check if true is yielded when several sets of two points are iterated over and at least one satisfies X[i] > X[j] and i < j.
+     * 3: Check if false is yielded when no set of two point satisfy X[i] > X[j] and i < j.
+     */
     @Test
     public void TestLIC11() {
         Input.Coordinates[0].setLocation(2, 0);
@@ -465,6 +550,9 @@ public class Tests {
         CMV.calcLIC11();
         assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[0] is larger than X[2]");
 
+        Input.Coordinates[0].setLocation(2, 0);
+        Input.Coordinates[1].setLocation(0, 0);
+        Input.Coordinates[2].setLocation(1, 1);
         Input.Coordinates[3].setLocation(2, 0);
         Input.Coordinates[4].setLocation(0, 0);
         Input.Coordinates[5].setLocation(0, 1);
@@ -473,11 +561,22 @@ public class Tests {
         CMV.calcLIC11();
         assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[2] is larger than X[5]");
 
+        Input.Coordinates[0].setLocation(2, 0);
+        Input.Coordinates[1].setLocation(0, 0);
+        Input.Coordinates[2].setLocation(1, 1);
+        Input.Coordinates[3].setLocation(2, 0);
+        Input.Coordinates[4].setLocation(0, 0);
         Input.Coordinates[5].setLocation(2, 0);
+        Input.NUMPOINTS = 6;
+        Input.Parameters.GPTS = 2;
         CMV.calcLIC11();
-        assertTrue(!CMV.cmv[11], "Error: LIC11 should be false");
+        assertFalse(CMV.cmv[11], "Error: LIC11 should be false");
     }
 
+    /**
+     * Test the calculation of LIC12
+     * Checks if false and true for various distances.
+     */
     @Test
     public void TestLIC12(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -502,6 +601,10 @@ public class Tests {
         assertTrue(CMV.cmv[12], "Error: Should be true");
     }
 
+
+    /**
+     * First and second tests checks if false and true respectively is yielded when an insufficient and sufficient obtuse triangle is provided.
+     */
     @Test
     public void TestLIC13() {
         // Obtuse triangle
