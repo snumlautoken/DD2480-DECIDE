@@ -14,3 +14,9 @@
 - Wrote much of the documentation/comments for various classes and fields including the input and cmv class. 
 - Reviewed and merged pull requests etc.
 - Also generally partook in creation of various issues, discussions and division of work.
+
+#### Jakob
+- Wrote LIC 0, 6, 10 & 11.
+- Wrote tests for the same LICs.
+- Issues, code reveiews and merges.
+- Wrote much of the Essence documentation.
