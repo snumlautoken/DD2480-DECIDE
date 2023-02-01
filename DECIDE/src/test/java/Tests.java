@@ -1,6 +1,8 @@
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
@@ -17,7 +19,7 @@ import org.junit.jupiter.api.Test;
 public class Tests {
 
     @BeforeAll
-    public static void setUpCoordinates() {
+    public static void setUp() {
         for (int i = 0; i < 100; i++) {
             Input.Coordinates[i] = new Point();
         }
@@ -65,20 +67,26 @@ public class Tests {
         Input.LCM[8][3] = Connector.ORR;
         Input.PUV[3] = true;
         Input.PUV[8] = true;
+        defaultInputs();
 
         Input.Coordinates[0].setLocation(5, 6);
         Input.Coordinates[1].setLocation(1, 1);
         Input.Coordinates[2].setLocation(100, 100);
-        Input.NUMPOINTS = 3;
-        Input.Parameters.AREA1 = 1;
-        Input.Parameters.RADIUS1 = 1;
+        Input.Coordinates[3].setLocation(300, 300);
+        Input.Coordinates[4].setLocation(400, 400);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.AREA1 = 100000;
+        Input.Parameters.RADIUS1 = 1;        
+        Input.Parameters.RADIUS2 = 2;
         Input.Parameters.EPSILON = 0.0;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertTrue(DECIDE.launch, "Error: decide gives false when true");
         Input.LCM[3][8] = Connector.ANDD;
         Input.LCM[8][3] = Connector.ANDD;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertFalse(DECIDE.launch, "Error: decide gives true when false");
+        Input.NUMPOINTS = 101;
+        assertThrows(IllegalArgumentException.class, () -> DECIDE.decide());
     }
 
     @Test
@@ -411,6 +419,34 @@ public class Tests {
     }
 
     @Test
+    public void TestLIC10(){
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 0);
+        Input.Coordinates[2].setLocation(0, 3);
+        Input.Coordinates[3].setLocation(2, 1);
+        Input.Coordinates[4].setLocation(4, 0);
+        Input.NUMPOINTS = 5;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.AREA1 = 5;
+        CMV.calcLIC10();
+        assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area between points 0,2,4 is 6 which is larger than 5");
+
+        Input.Parameters.AREA1 = 7;
+        CMV.calcLIC10();
+        assertTrue(!CMV.cmv[10], "Error! LIC0 should be false since the area between points 0,2,4 is 6 which is smaller than 7");
+
+        Input.Coordinates[5].setLocation(2, 1);
+        Input.Coordinates[6].setLocation(4, 20);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.EPTS = 2;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.AREA1 = 7;
+        CMV.calcLIC10();
+        assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area surely is larger than 5 when the last coordinate is involved");
+    }
+    
+    @Test
     public void TestLIC11() {
         Input.Coordinates[0].setLocation(2, 0);
         Input.Coordinates[1].setLocation(0, 0);
@@ -478,5 +514,26 @@ public class Tests {
         assertTrue(CMV.cmv[13], "Error: Obtuse LIC8 gives false when true");
     }
 
+    public void defaultInputs() {
+        Input.Parameters.AREA1 = 1;
+        Input.Parameters.RADIUS1 = 1;
+        Input.Parameters.AREA2 = 1;
+        Input.Parameters.RADIUS2 = 1;
+        Input.Parameters.EPSILON = 0.0;
+        Input.Parameters.LENGTH1 = 0.0;
+        Input.Parameters.LENGTH2 = 0.0;
+        Input.Parameters.DIST = 0.0;
+        Input.Parameters.APTS = 1;
+        Input.Parameters.BPTS = 1;
+        Input.Parameters.CPTS = 1;
+        Input.Parameters.DPTS = 1;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 1;
+        Input.Parameters.GPTS = 1;
+        Input.Parameters.NPTS = 3;
+        Input.Parameters.KPTS = 1;
+        Input.Parameters.QPTS = 2;
+        Input.Parameters.QUADS = 1;
+    }
 
 }
