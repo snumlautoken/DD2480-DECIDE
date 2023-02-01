@@ -8,6 +8,7 @@
 - Minimum enclosing radius function
 - Connector enum in inputs
 - Corresponding tests
+- Created issues, reviewed pull requests, etc
 
 #### Oskar
 - Contributed in the code by writing the CMV class shell, LIC 2, 7 & 12 and tests for these functions. 
