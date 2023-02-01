@@ -217,7 +217,6 @@ public class CMV{
             }
         }
         cmv[4] = false;
-        return;
     }
 
     /**
@@ -472,7 +471,6 @@ public class CMV{
         AREA2. Both parts must be true for the LIC to be true. The condition is not met when
         NUMPOINTS < 5.
      */
-    // TODO!
     public static void calcLIC14(){
 
         cmv[14] = false;
