@@ -210,6 +210,8 @@ public class CMV{
                     }
                 }
 
+                System.out.println(Input.Parameters.QUADS);
+                System.out.println(count);
             //Checks if requirement of more quadrants that QUADS
             if(Input.Parameters.QUADS < count) {
                 cmv[4] = true;
@@ -217,7 +219,6 @@ public class CMV{
             }
         }
         cmv[4] = false;
-        return;
     }
 
     /**
@@ -472,7 +473,6 @@ public class CMV{
         AREA2. Both parts must be true for the LIC to be true. The condition is not met when
         NUMPOINTS < 5.
      */
-    // TODO!
     public static void calcLIC14(){
 
         cmv[14] = false;
