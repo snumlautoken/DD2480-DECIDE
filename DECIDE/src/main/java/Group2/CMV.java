@@ -210,8 +210,6 @@ public class CMV{
                     }
                 }
 
-                System.out.println(Input.Parameters.QUADS);
-                System.out.println(count);
             //Checks if requirement of more quadrants that QUADS
             if(Input.Parameters.QUADS < count) {
                 cmv[4] = true;
