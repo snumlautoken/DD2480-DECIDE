@@ -15,7 +15,8 @@ public class DECIDE {
      * Then calculates FUV from PUM and PUV according to spec. 
      * If all values in FUV is true, launch is set to true and function prints "Yes" to console. Otherwise "No" is outputed.
      */
-    public static void decide() {
+    public static void decide() throws IllegalArgumentException {
+        validateInput();
         CMV.calculate();
         boolean[][] PUM = new boolean[15][15];
         boolean[] FUV = new boolean[15];
@@ -51,4 +52,32 @@ public class DECIDE {
         for(boolean b : array) if(!b) return false;
         return true;
     }
+
+    /**
+     * Helper function to check if input parameters are valid
+     * @throws IllegalArgumentException
+     */
+
+    private static void validateInput() throws IllegalArgumentException {
+            isTrue(Input.NUMPOINTS >= 2 && Input.NUMPOINTS <= 100);
+            isTrue(Input.Parameters.LENGTH1 >= 0 && Input.Parameters.LENGTH2 >= 0 );
+            isTrue(Input.Parameters.EPSILON >= 0 && Input.Parameters.EPSILON < Math.PI);
+            isTrue(Input.Parameters.AREA1 >= 0 && Input.Parameters.AREA2 >= 0);
+            isTrue(Input.Parameters.RADIUS1 >= 0 && Input.Parameters.RADIUS2 >= 0);
+            isTrue(Input.Parameters.QPTS >= 2 && Input.Parameters.QPTS <= Input.NUMPOINTS);
+            isTrue(Input.Parameters.QUADS >= 1 && Input.Parameters.QUADS <= 3);
+            isTrue(Input.Parameters.NPTS >= 3 && Input.Parameters.NPTS <= Input.NUMPOINTS);
+            isTrue(Input.Parameters.KPTS >= 1 && Input.Parameters.KPTS <= Input.NUMPOINTS-2);
+            isTrue(Input.Parameters.APTS >= 1 && Input.Parameters.BPTS >= 1 && Input.Parameters.APTS + Input.Parameters.BPTS <= Input.NUMPOINTS - 3);
+            isTrue(Input.Parameters.CPTS >= 1 && Input.Parameters.DPTS >= 1 && Input.Parameters.CPTS + Input.Parameters.DPTS <= Input.NUMPOINTS - 3);
+            isTrue(Input.Parameters.EPTS >= 1 && Input.Parameters.FPTS >= 1 && Input.Parameters.EPTS + Input.Parameters.FPTS <= Input.NUMPOINTS - 3);
+            isTrue(Input.Parameters.GPTS >= 1 && Input.Parameters.GPTS <= Input.NUMPOINTS-2);
+            isTrue(Input.Parameters.DIST >= 0);
+    }
+
+    /**
+     * Helper function to check if boolean expression is true
+     * @throws IllegalArgumentException
+     */
+    private static void isTrue(boolean b) throws IllegalArgumentException {if (!b) {throw new IllegalArgumentException("INVALID INPUT");}}
 }
