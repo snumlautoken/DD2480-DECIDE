@@ -102,13 +102,12 @@ public class Tests {
     }
 
     /**
-     * Tests for LIC 0 function
+     * Test the calculation of LIC0 (bit 0 in the CMV)
+     * 1: Check if true is yielded when two consecutive points are a distance larger than 0 appart.
+     * 2: Check if false is yielded when all pairs of consecutive points are a distance smaller than 4 appart.
      */
     @Test
     public void TestLIC0(){
-
-        // Test 1
-        // Check if true is yielded when two consecutive points are a distance larger than 0 appart.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.NUMPOINTS = 2;
@@ -116,8 +115,6 @@ public class Tests {
         CMV.calcLIC0();
         assertTrue(CMV.cmv[0], "Error! LIC0 should be true since the distance is larger than 0");
 
-        // Test 2
-        // Check if false is yielded when all pairs of consecutive points are a distance smaller than 4 appart.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(1, 1);
@@ -255,12 +252,15 @@ public class Tests {
     }
 
     /**
-     * Tests for LIC 6 function
+     * Test the calculation of LIC6 (bit 6 in the CMV)
+     * 1: Check if true is yielded when the consecutive point (1, 2) is a distance larger than DIST from the line formed between endpoints.
+     * 2: Check if false is yelded when the consecutive point (5,3) has its closest distance outside of the two endpoints 
+     *    (The line is assumed to be infinite and reach beyond the endpoints), and the closest distance is smaller than DIST.
+     * 3: Check if false is yielded when the consecutive point (1, 0) lies on the line formed by the endpoints, and DIST is larger than 0.
+     * 4: Check if true is yielded when the endpoints have the same coordinates and the consecutive point (1, 0) has a larger distance than DIST from the endpoints.
      */
     @Test
     public void TestLIC6(){
-        // Test 1
-        // Check if true is yielded when the consecutive point (1, 2) is a distance larger than DIST from the line formed between endpoints.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 2);
         Input.Coordinates[2].setLocation(3, 0);
@@ -270,9 +270,6 @@ public class Tests {
         CMV.calcLIC6();
         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is greater than 1");
 
-        // Test 2
-        // Check if false is yelded when the consecutive point (5,3) has its closest distance outside of the two endpoints 
-        // (The line is assumed to be infinite and reach beyond the endpoints), and the closest distance is smaller than DIST.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(5, 3);
         Input.Coordinates[2].setLocation(3, 0);
@@ -282,8 +279,6 @@ public class Tests {
         CMV.calcLIC6();
         assertFalse(CMV.cmv[6], "Error! LIC6 should be false since the distance is 3");
 
-        // Test 3
-        // Check if false is yielded when the consecutive point (1, 0) lies on the line formed by the endpoints, and DIST is larger than 0.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(2, 0);
@@ -293,8 +288,6 @@ public class Tests {
         CMV.calcLIC6();
         assertFalse(CMV.cmv[6], "Error! LIC6 should be false since the distance is 0");
 
-        // Test 4
-        // Check if true is yielded when the endpoints have the same coordinates and the consecutive point (1, 0) has a larger distance than DIST from the endpoints.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(0, 0);
@@ -450,12 +443,13 @@ public class Tests {
     }
 
     /**
-     * Tests for LIC 10 function
+     * Test the calculation of LIC10 (bit 10 in the CMV)
+     * 1: Check if true is yielded when triangle has a larger area than AREA1.
+     * 2: Check if false is yielded when triangle has a smaller area than AREA1.
+     * 3: Check if true is yielded when EPTS and FPTS are different and one of the triangles formed has an area larger than AREA1.
      */
     @Test
     public void TestLIC10(){
-        // Test 1
-        // Check if true is yielded when triangle has a larger area than AREA1.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(0, 3);
@@ -468,8 +462,6 @@ public class Tests {
         CMV.calcLIC10();
         assertTrue(CMV.cmv[10], "Error! LIC0 should be true since the area between points 0,2,4 is 6 which is larger than 5");
 
-        // Test 2
-        // Check if false is yielded when triangle has a smaller area than AREA1.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(0, 3);
@@ -482,8 +474,6 @@ public class Tests {
         CMV.calcLIC10();
         assertFalse(CMV.cmv[10], "Error! LIC0 should be false since the area between points 0,2,4 is 6 which is smaller than 7");
 
-        // Test 3
-        // Check if true is yielded when EPTS and FPTS are different and one of the triangles formed has an area larger than AREA1.
         Input.Coordinates[0].setLocation(0, 0);
         Input.Coordinates[1].setLocation(1, 0);
         Input.Coordinates[2].setLocation(0, 3);
@@ -500,12 +490,13 @@ public class Tests {
     }
     
     /**
-     * Tests for LIC 11 function
+     * Test the calculation of LIC11 (bit 11 in the CMV)
+     * 1: Check if true is yielded when when X[i] is larger than X[j] and i < j.
+     * 2: Check if true is yielded when several sets of two points are iterated over and at least one satisfies X[i] > X[j] and i < j.
+     * 3: Check if false is yielded when no set of two point satisfy X[i] > X[j] and i < j.
      */
     @Test
     public void TestLIC11() {
-        // Test 1
-        // Check if true is yielded when when X[i] is larger than X[j] and i < j.
         Input.Coordinates[0].setLocation(2, 0);
         Input.Coordinates[1].setLocation(0, 0);
         Input.Coordinates[2].setLocation(1, 1);
@@ -514,8 +505,6 @@ public class Tests {
         CMV.calcLIC11();
         assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[0] is larger than X[2]");
 
-        // Test 2
-        // Check if true is yielded when several sets of two points are iterated over and at least one satisfies X[i] > X[j] and i < j.
         Input.Coordinates[0].setLocation(2, 0);
         Input.Coordinates[1].setLocation(0, 0);
         Input.Coordinates[2].setLocation(1, 1);
@@ -527,8 +516,6 @@ public class Tests {
         CMV.calcLIC11();
         assertTrue(CMV.cmv[11], "Error: LIC11 should be true since X[2] is larger than X[5]");
 
-        // Test 3
-        // Check if false is yielded when no set of two point satisfy X[i] > X[j] and i < j.
         Input.Coordinates[0].setLocation(2, 0);
         Input.Coordinates[1].setLocation(0, 0);
         Input.Coordinates[2].setLocation(1, 1);
