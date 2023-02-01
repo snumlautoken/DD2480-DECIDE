@@ -4,9 +4,13 @@ import java.awt.Point;
 import java.util.Arrays;
 
 
+/**
+ * Class contains the conditions met vector (cmv) array along with 
+ * all LIC calculating functions with helpers.
+ */
 public class CMV{
 
-    /*
+    /**
      * Comparison results
      * GT = Greater Than
      * LT = Lesser Than
@@ -17,6 +21,8 @@ public class CMV{
         LT,
         EQ;
     }
+
+    /** The Conditions Met Vector. 15 boolean values corresponding to each LIC */
     public static boolean[] cmv = new boolean[15];
 
     /**
@@ -34,7 +40,10 @@ public class CMV{
 
         return Comptype.GT;
     }
-    // Calls all LIC calculcations
+    
+    /**
+     * This function calls all 15 LIC calculations which updates the entire cmv array.
+     */
     public static void calculate(){
         calcLIC0();
         calcLIC1();
@@ -53,7 +62,10 @@ public class CMV{
         calcLIC14();
     }
 
-   // TODO!
+    /**
+     * Sets cmv[0] to true if there exists at least one set of two consecutive data points that are a distance greater than
+     * the length, LENGTH1, apart.
+     */
     public static void calcLIC0(){
         cmv[0] = false;
 
@@ -67,7 +79,10 @@ public class CMV{
         }
     }
 
-
+    /**
+     * Sets cmv[1] to true if there exists at least one set of three consecutive data points that cannot all be contained
+     * within or on a circle of radius RADIUS1.
+     */
     public static void calcLIC1(){
         cmv[1] = false;
         if (Input.NUMPOINTS < 3 || doubleCompare(Input.Parameters.RADIUS1, 0) == Comptype.LT)
@@ -82,7 +97,16 @@ public class CMV{
         }
     }
 
+    /**
+     * Sets cmv[2] to true if there exists at least one set of three consecutive data points which form an angle such that:
+        angle < (PI−EPSILON)
+        or
+        angle > (PI+EPSILON)
+        The second of the three consecutive points is always the vertex of the angle. If either the first
+        point or the last point (or both) coincides with the vertex, the angle is undefined and the LIC
+        is not satisfied by those three points.
 
+     */
     public static void calcLIC2(){
         cmv[2] = false;
 
@@ -114,6 +138,10 @@ public class CMV{
 
     }
 
+    /**
+     * Sets cmv[3] to true if there exists at least one set of three consecutive data points that are the vertices of a triangle
+     * with area greater than AREA1
+     */
     public static void calcLIC3(){
         if (Input.NUMPOINTS < 3) {
             cmv[3] = false;
@@ -132,7 +160,13 @@ public class CMV{
         cmv[3] = false;
     }
 
-    // Calculates LIC4
+    /**
+     *  Sets cmv[4] to true if there exists at least one set of Q PTS consecutive data points that lie in more than QUADS
+        quadrants. Where there is ambiguity as to which quadrant contains a given point, priority
+        of decision will be by quadrant number, i.e., I, II, III, IV. For example, the data point (0,0)
+        is in quadrant I, the point (-l,0) is in quadrant II, the point (0,-l) is in quadrant III, the point
+        (0,1) is in quadrant I and the point (1,0) is in quadrant I.
+     */
     public static void calcLIC4(){
         cmv[4] = false;
 
@@ -183,9 +217,12 @@ public class CMV{
             }
         }
         cmv[4] = false;
-        return;
     }
 
+    /**
+     * Sets cmv[5] to true if There exists at least one set of two consecutive data points, (X[i],Y[i]) and (X[j],Y[j]), such
+        that X[j] - X[i] < 0. (where i = j-1)
+     */
     public static void calcLIC5(){
         cmv[5] = false;
         for (int i = 0; i < Input.NUMPOINTS - 1; i++) {
@@ -196,7 +233,13 @@ public class CMV{
         }
     }
 
-    
+    /**
+     * Sets cmv[6] to true if there exists at least one set of N PTS consecutive data points such that at least one of the
+        points lies a distance greater than DIST from the line joining the first and last of these N PTS
+        points. If the first and last points of these N PTS are identical, then the calculated distance
+        to compare with DIST will be the distance from the coincident point to all other points of
+        the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
+     */
     public static void calcLIC6(){
         cmv[6] = false;
 
@@ -229,7 +272,10 @@ public class CMV{
         }
     }
 
-
+    /**
+     * Sets cmv[7] to true if there exists at least one set of two data points separated by exactly K PTS consecutive intervening points that are a distance greater than the length, LENGTH1, apart. The condition
+        is not met when NUMPOINTS < 3
+     */
     public static void calcLIC7(){
         cmv[7] = false;
 
@@ -249,6 +295,11 @@ public class CMV{
 
     }
 
+    /**
+     * Sets cmv[8] to true if there exists at least one set of three data points separated by exactly A PTS and B PTS
+        consecutive intervening points, respectively, that cannot be contained within or on a circle of
+        radius RADIUS1. The condition is not met when NUMPOINTS < 5.
+     */
     public static void calcLIC8(){
         if (Input.NUMPOINTS < 5) {
             cmv[8] = false;
@@ -265,11 +316,52 @@ public class CMV{
 
         cmv[8] = false;
     }
+    
+    /**
+     * Sets cmv[9] to true if there exists at least one set of three data points separated by exactly C PTS and D PTS
+        consecutive intervening points, respectively, that form an angle such that:
+        angle < (PI−EPSILON)
+        or
+        angle > (PI+EPSILON)
+        The second point of the set of three points is always the vertex of the angle. If either the first
+        point or the last point (or both) coincide with the vertex, the angle is undefined and the LIC
+        is not satisfied by those three points. When NUMPOINTS < 5, the condition is not met.
+     */
+      public static void calcLIC9(){
+        cmv[9] = false;
 
-    // TODO!
-    public static void calcLIC9(){}
+        if(Input.NUMPOINTS < 5){
+            return;
+        }
 
-    // TODO!
+        for (int i = 0; i < Input.NUMPOINTS-(Input.Parameters.CPTS+Input.Parameters.DPTS+2); i++) {
+            int bn = Input.Parameters.CPTS+1;
+            int bn2 = bn + Input.Parameters.DPTS+1;
+
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+bn];
+            Point p3 = Input.Coordinates[i+bn2];
+
+            // If either the first point or the last point (or both) coincides with the vertex, the angle is undefined
+            if((doubleCompare(p1.x, p2.x)==Comptype.EQ&&doubleCompare(p1.y, p2.y)==Comptype.EQ)
+             ||(doubleCompare(p2.x, p3.x)==Comptype.EQ&&doubleCompare(p2.y, p3.y)==Comptype.EQ)){
+                continue;
+            }
+            
+            double angle = Math.acos((Math.pow(p2.distance(p1), 2)+Math.pow(p2.distance(p3), 2)-Math.pow(p1.distance(p3), 2))/
+            (2*p2.distance(p1)*p2.distance(p3)));
+            
+            if(doubleCompare(angle, Math.PI-Input.Parameters.EPSILON)==Comptype.LT || doubleCompare(angle, Math.PI+Input.Parameters.EPSILON)==Comptype.GT){
+                cmv[9] = true;
+                break;
+            }
+        }
+        return;
+
+    }
+
+    /** Sets cmv[10] to true if there exists at least one set of three data points separated by exactly E PTS and F PTS consecutive intervening points, respectively, that are the vertices of a triangle with area greater
+     * than AREA1. The condition is not met when NUMPOINTS < 5. */
     public static void calcLIC10(){
         cmv[10] = false;
 
@@ -289,7 +381,12 @@ public class CMV{
         }
     }
 
-    // TODO!
+    /**
+     * Sets cmv[11] to true if there exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
+        exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
+        condition is not met when NUMPOINTS < 3.
+
+     */
     public static void calcLIC11(){
         cmv[11] = false;
 
@@ -304,7 +401,13 @@ public class CMV{
 
     }
 
-    // TODO!
+    /**
+     * Sets cmv[12] to true if There exists at least one set of two data points, separated by exactly K PTS consecutive
+        intervening points, which are a distance greater than the length, LENGTH1, apart. In addition, there exists at least one set of two data points (which can be the same or different from
+        the two data points just mentioned), separated by exactly K PTS consecutive intervening
+        points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
+        for the LIC to be true. The condition is not met when NUMPOINTS < 3.
+     */
     public static void calcLIC12(){
         cmv[12] = false;
 
@@ -331,6 +434,14 @@ public class CMV{
         if(GT&&LT) cmv[12] = true;
     }
 
+    /** Sets cmv[13] to true if there exists at least one set of three data points, separated by exactly A PTS and B PTS
+    consecutive intervening points, respectively, that cannot be contained within or on a circle of
+    radius RADIUS1. In addition, there exists at least one set of three data points (which can be
+    the same or different from the three data points just mentioned) separated by exactly A PTS
+    and B PTS consecutive intervening points, respectively, that can be contained in or on a
+    circle of radius RADIUS2. Both parts must be true for the LIC to be true. The condition is
+    not met when NUMPOINTS < 5.
+    */
     public static void calcLIC13(){
         cmv[13] = false;
         if (Input.NUMPOINTS < 5) {
@@ -353,9 +464,61 @@ public class CMV{
 
     }
 
-    // TODO!
-    public static void calcLIC14(){}
+    /**
+     * Sets cmv[14] to true if there exists at least one set of three data points, separated by exactly E PTS and F PTS consecutive intervening points, respectively, that are the vertices of a triangle with area greater
+        than AREA1. In addition, there exist three data points (which can be the same or different
+        from the three data points just mentioned) separated by exactly E PTS and F PTS consecutive intervening points, respectively, that are the vertices of a triangle with area less than
+        AREA2. Both parts must be true for the LIC to be true. The condition is not met when
+        NUMPOINTS < 5.
+     */
+    public static void calcLIC14(){
 
+        cmv[14] = false;
+
+        if(Input.NUMPOINTS < 5){
+            return;
+        }
+
+        boolean GT_area1 = false;
+        boolean LT_area2 = false;
+
+        int E_pos = Input.Parameters.EPTS+1;
+        int F_pos = E_pos + Input.Parameters.FPTS+1;
+
+        for (int i = 0; i < Input.NUMPOINTS-(F_pos); i++) {
+
+            Point p1 = Input.Coordinates[i];
+            Point p2 = Input.Coordinates[i+E_pos];
+            Point p3 = Input.Coordinates[i+F_pos];
+
+            Double area = Math.abs(p1.getX()*p2.getY()+p2.getX()*p3.getY() + p3.getX()*p1.getY() - p1.getY()*p2.getX() - p2.getY()*p3.getX() - p3.getY()*p1.getX())/2;
+            if (doubleCompare(area, Input.Parameters.AREA1) == Comptype.GT) {
+                GT_area1 = true;
+            }
+            if (doubleCompare(area, Input.Parameters.AREA2) == Comptype.LT) {
+                LT_area2 = true;
+            }
+            if(GT_area1 && LT_area2){
+                break;
+            }
+        }
+
+        if(GT_area1 && LT_area2){
+            cmv[14] = true;
+        }
+
+        return;
+
+    }
+
+
+    /**
+     * Helper function used in LIC 1, 8 and 13.
+     * @param p1
+     * @param p2
+     * @param p3
+     * @return minimum radius to enclose points in circle
+     */
     private static double minRadiusEnclose(Point p1, Point p2, Point p3) {
         double a = p1.distance(p2);
         double b = p1.distance(p3);
