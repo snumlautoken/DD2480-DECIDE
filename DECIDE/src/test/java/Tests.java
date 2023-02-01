@@ -1,17 +1,19 @@
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import Group2.CMV;
 import Group2.DECIDE;
 import Group2.Input;
 import Group2.Input.Connector;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 
 public class Tests {
@@ -68,7 +70,7 @@ public class Tests {
      * Also test if exception is thrown in case of incorrect input data.
      */
     @Test
-    public void TestDecide() throws Exception {
+    public void TestDecide() {
         for (int i = 0; i < 15; i++) {
             for (int j = i; j < 15; j++) {
                 Input.LCM[i][j] = Connector.NOTUSED;
@@ -93,12 +95,14 @@ public class Tests {
         Input.Parameters.RADIUS1 = 1;        
         Input.Parameters.RADIUS2 = 2;
         Input.Parameters.EPSILON = 0.0;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertTrue(DECIDE.launch, "Error: decide gives false when true");
         Input.LCM[3][8] = Connector.ANDD;
         Input.LCM[8][3] = Connector.ANDD;
-        DECIDE.decide();
+        assertDoesNotThrow(() -> DECIDE.decide());
         assertFalse(DECIDE.launch, "Error: decide gives true when false");
+        Input.NUMPOINTS = 101;
+        assertThrows(IllegalArgumentException.class, () -> DECIDE.decide());
     }
 
     /**
@@ -237,7 +241,63 @@ public class Tests {
         assertFalse(CMV.cmv[3], "Error: LIC3 true when false, for numpoints < 3");
 
     }
-    
+
+    /**
+     * Test for LIC4 functionality. The test is divided into 4 subtests.
+     * Test1 tests that the LIC is false if the number of QPTS is more than NUMPOINTS
+     * Test2 tests that the LIC is false if there are points in less quadrants than specified by input QUADS
+     * Test3 tests that the LIC calculates the correct amount of QUADS with multiple data points
+     * Test4 tests that the LIC returns true when the datapoints are in the corner cases specified for the LIC
+     */
+    @Test
+    public void TestLIC4(){
+        //Test1
+        Input.Coordinates[0].setLocation(0, 0);
+        Input.Coordinates[1].setLocation(1, 1);
+        Input.Coordinates[2].setLocation(100, 100);
+        Input.NUMPOINTS = 4;
+        Input.Parameters.QPTS = 5;
+        Input.Parameters.QUADS = 1;
+        CMV.calcLIC4();
+        assertFalse(CMV.cmv[4], "Error: Should be false since not enough QPTS");
+
+        //Test2
+        Input.Coordinates[0].setLocation(0, 0); //Q1
+        Input.Coordinates[2].setLocation(0, -1);//Q3
+        Input.Coordinates[3].setLocation(-2, -1);//Q4
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 4;
+        Input.Parameters.QUADS = 4;
+        CMV.calcLIC4();
+        assertFalse(CMV.cmv[4], "Error: Not enough QUADS");
+
+        //Test3
+        Input.Coordinates[0].setLocation(0, 0); //Q1
+        Input.Coordinates[1].setLocation(0, 0); //Q1
+        Input.Coordinates[2].setLocation(1, 1); //Q1
+        Input.Coordinates[3].setLocation(-1, -1); //Q4
+        Input.Coordinates[4].setLocation(-1, 0); //Q2
+        Input.Coordinates[5].setLocation(-100, -1); //Q4
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 3;
+        Input.Parameters.QUADS = 2;
+        CMV.calcLIC4();
+        assertTrue(CMV.cmv[4], "Calculates correct amount of QUADS with multiple data points");
+
+        //Test4
+        Input.Coordinates[0].setLocation(0, 0); //Q1
+        Input.Coordinates[1].setLocation(-1, 0); //Q2
+        Input.Coordinates[2].setLocation(0, -1); //Q3
+        Input.Coordinates[3].setLocation(-1, -1); //Q4
+        Input.Coordinates[4].setLocation(0, 1); //Q1
+        Input.Coordinates[5].setLocation(-100, -0.5); //Q4
+        Input.NUMPOINTS = 100;
+        Input.Parameters.QPTS = 6;
+        Input.Parameters.QUADS = 3;
+        CMV.calcLIC4();
+        assertTrue(CMV.cmv[4], "Calculates correct amount of quads with corner cases");
+    }
+
     /**
      * Test the calculation of LIC5 (bit 5 in the CMV)
      * 1: If X-values in the coordinates are always increasing the bit should be set to false
@@ -305,59 +365,6 @@ public class Tests {
         assertTrue(CMV.cmv[6], "Error! LIC6 should be true since the distance is 1");
     }
 
-    @Test
-    public void TestLIC4(){
-        Input.Coordinates[0].setLocation(0, 0);
-        Input.Coordinates[1].setLocation(1, 1);
-        Input.Coordinates[2].setLocation(100, 100);
-        Input.NUMPOINTS = 4;
-        Input.Parameters.QPTS = 5;
-        Input.Parameters.QUADS = 1;
-
-        CMV.calcLIC4();
-        assertFalse(CMV.cmv[4], "Error: Should be false since not enough QPTS");
-
-        Input.Parameters.QPTS = 3;
-        Input.Parameters.QUADS = 3;
-        CMV.calcLIC4();
-        assertFalse(CMV.cmv[4], "Error: Not enough QUADS");
-
-        Input.Coordinates[0].setLocation(0, 0);
-        Input.Coordinates[1].setLocation(-1, 0);
-        Input.Coordinates[2].setLocation(0, -1);
-        Input.Coordinates[3].setLocation(-2, 1);
-        Input.NUMPOINTS = 100;
-        Input.Parameters.QPTS = 4;
-        Input.Parameters.QUADS = 4;
-        CMV.calcLIC4();
-        assertFalse(CMV.cmv[4], "Error: Does not calculate all QUADS");
-
-        Input.Coordinates[0].setLocation(0, 0); //Q1
-        Input.Coordinates[1].setLocation(0, 0); //Q1
-        Input.Coordinates[2].setLocation(1, 1); //Q1
-        Input.Coordinates[3].setLocation(-1, -1); //Q4
-        Input.Coordinates[4].setLocation(-1, 0); //Q2
-        Input.Coordinates[5].setLocation(-100, -0.5); //Q4
-        Input.NUMPOINTS = 100;
-        Input.Parameters.QPTS = 3;
-        Input.Parameters.QUADS = 2;
-        CMV.calcLIC4();
-        assertTrue(CMV.cmv[4], "Calculates correct amount of QUADS with multiple data points");
-
-        Input.Coordinates[0].setLocation(0, 0); //Q1
-        Input.Coordinates[1].setLocation(-1, 0); //Q2
-        Input.Coordinates[2].setLocation(0, -1); //Q3
-        Input.Coordinates[3].setLocation(-1, -1); //Q4
-        Input.Coordinates[4].setLocation(0, 1); //Q1
-        Input.Coordinates[5].setLocation(-100, -0.5); //Q4
-        Input.NUMPOINTS = 100;
-        Input.Parameters.QPTS = 6;
-        Input.Parameters.QUADS = 3;
-        CMV.calcLIC4();
-        assertTrue(CMV.cmv[4], "Calculates correct amount of quads with corner cases");
-    }
-
-
     /**
      * Test the calculation of LIC7
      * Checks if false and true for various distances of points and with varying KPTS.
@@ -395,7 +402,6 @@ public class Tests {
      * Fifth and sixth tests checks if false and true respectively is yielded when an insufficient and sufficient acute triangle is provided.
      * Seventh test checks if true is yielded when number of points are above minimum.
      */
-
     @Test
     public void TestLIC8() {
         // Obtuse triangle
@@ -451,6 +457,34 @@ public class Tests {
         Input.NUMPOINTS = 6;
         Input.Parameters.RADIUS1 = 4;
         assertTrue(CMV.cmv[8], "Error: Acute LIC8 gives false when true");
+    }
+
+     /**
+     * Test for LIC9 functionality. The test is divided into 2 subtests.
+     * Test1 tests that the LIC is true for a 90 degree angle
+     * Test2 tests that the LIC is false for larger epsilon value
+     */
+    @Test
+    public void TestLIC9(){
+        //Test1
+        Input.Parameters.CPTS = 1;
+        Input.Parameters.DPTS = 1;
+        Input.NUMPOINTS = 6;
+        Input.Coordinates[0].setLocation(0, 1);
+        Input.Coordinates[1].setLocation(-1, -1);
+        Input.Coordinates[2].setLocation(0, 0);
+        Input.Coordinates[3].setLocation(-1, -1);
+        Input.Coordinates[4].setLocation(1, 0);
+        Input.Parameters.EPSILON = 0.1;
+        CMV.calcLIC9();
+        assertTrue(CMV.cmv[9], "Error: LIC9 gives false when true");
+
+        //Test2
+        Input.Parameters.EPSILON = 2;
+        Input.NUMPOINTS = 6;
+        CMV.calcLIC9();
+        assertFalse(CMV.cmv[9], "Error: LIC9 gives true when false");
+
     }
 
     /**
@@ -571,7 +605,6 @@ public class Tests {
     /**
      * First and second tests checks if false and true respectively is yielded when an insufficient and sufficient obtuse triangle is provided.
      */
-
     @Test
     public void TestLIC13() {
         // Obtuse triangle
@@ -591,6 +624,35 @@ public class Tests {
         Input.Parameters.RADIUS2 = 5;
         CMV.calcLIC13();
         assertTrue(CMV.cmv[13], "Error: Obtuse LIC8 gives false when true");
+    }
+
+    /**
+     * Test for LIC14 functionality. The test is divided into 2 subtests.
+     * Test1 tests that the LIC is false when no set of points fullfil both area requirements.
+     * Test2 tests that the LIC is true any set of points (within spec) fullfil both area requirements.
+     */
+    @Test
+    public void TestLIC14() {
+        //Test1
+        Input.Coordinates[0].setLocation(-1, 1);
+        Input.Coordinates[1].setLocation(-1,-1);
+        Input.Coordinates[2].setLocation(-1,-1);
+        Input.Coordinates[3].setLocation(1, 1);
+        Input.Coordinates[4].setLocation(5, 6);
+        Input.Coordinates[5].setLocation(1,-1);
+        Input.Coordinates[6].setLocation(3,-1);
+        Input.NUMPOINTS = 7;
+        Input.Parameters.EPTS = 1;
+        Input.Parameters.FPTS = 2;
+        Input.Parameters.AREA1 = 4;
+        Input.Parameters.AREA2 = 4;
+        CMV.calcLIC14();
+        assertFalse(CMV.cmv[14], "Error: LIC14 true when false");
+
+        //Test2
+        Input.Parameters.AREA1 = 3;
+        CMV.calcLIC14();
+        assertTrue(CMV.cmv[14], "Error: LIC14 false when true");
     }
 
     public void defaultInputs() {
