@@ -158,6 +158,13 @@ public class Tests {
         assertTrue(!CMV.cmv[1], "Error: CMV1 should be set to false if the 3 points are non-consequtive");
     }
 
+    /**
+     * Test the calculation of LIC2 (bit 2 in the CMV)
+     * 1: Check if not true if points coincides. 
+     * 2: Check if true if an angle is less than PI
+     * 3: Check if not true since there is an angle=PI but there is an epsilon.
+     * 4: Check if true, since there is an angle less than PI-epsilon.
+     */
     @Test
     public void TestLIC2() {
         Input.Coordinates[0].setLocation(0, 0);
@@ -351,6 +358,10 @@ public class Tests {
     }
 
 
+    /**
+     * Test the calculation of LIC7
+     * Checks if false and true for various distances of points and with varying KPTS.
+     */
     @Test
     public void TestLIC7(){
         Input.Coordinates[0].setLocation(0, 0);
@@ -528,6 +539,10 @@ public class Tests {
         assertFalse(CMV.cmv[11], "Error: LIC11 should be false");
     }
 
+    /**
+     * Test the calculation of LIC12
+     * Checks if false and true for various distances.
+     */
     @Test
     public void TestLIC12(){
         Input.Coordinates[0].setLocation(0, 0);
