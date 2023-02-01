@@ -20,3 +20,12 @@
 - Wrote tests for the same LICs.
 - Issues, code reveiews and merges.
 - Wrote much of the Essence documentation.
+
+#### Felix
+- Active in discussions about how we would start with the project  
+- Set up the project environment (folders/classes/maven)  
+- Wrote the base of the Input class  
+- Wrote the doubleCompare function and tests  
+- Wrote LIC 1 and 5 and tests for those  
+- Wrote a number of small issues that came up on the way  
+- Reviewed a number of pull requests and merged  
